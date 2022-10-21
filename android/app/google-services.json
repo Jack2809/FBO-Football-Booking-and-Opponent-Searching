@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1031529270386",
+    "project_id": "football-appilication",
+    "storage_bucket": "football-appilication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031529270386:android:682d40f78f1f768bfd86eb",
+        "android_client_info": {
+          "package_name": "com.example.football_booking_fbo_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031529270386-sr2vsdj31ji0gp69m4tpoqa72t9fnteh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO1ZiSKw-c9H1VRscDx7S9toQVPx_rhqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031529270386-sr2vsdj31ji0gp69m4tpoqa72t9fnteh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
