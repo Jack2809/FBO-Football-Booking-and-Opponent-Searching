@@ -31,5 +31,6 @@ class OpponentRequestBloc extends Bloc<OpponentRequestEvent,OpponentRequestState
       emit(LoadedOpponentRequests(requestList:fetchedRequestListAfterCreation ));
 
     });
+
   }
 }

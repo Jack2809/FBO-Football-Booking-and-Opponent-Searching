@@ -126,6 +126,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                     ),
                     SizedBox(height: 10.0,),
                     TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: jerseyNoC,
                       decoration: InputDecoration(
                         prefix: Icon(Icons.mail),
@@ -143,6 +144,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                     ),
                     SizedBox(height: 10.0,),
                     TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: ageC,
                       decoration: InputDecoration(
                         prefix: Icon(Icons.mail),
@@ -168,7 +170,10 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
         ),
       ),
       floatingActionButton: Container(
-        color: Colors.green,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.green,
+        ),
         child: TextButton.icon(
           onPressed: () {
             if(formGlobalKey.currentState!.validate()) {
@@ -196,8 +201,8 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
 
             }
           },
-          icon: Icon(Icons.add,color:Colors.black),
-          label: Text('Tạo đôi hình',style: TextLine2()),
+          icon: Icon(Icons.add,color:Colors.white),
+          label: Text('Tạo cầu thủ',style: MyButtonText()),
         ),
       ),
     );

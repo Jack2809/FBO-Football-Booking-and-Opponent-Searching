@@ -185,26 +185,32 @@ class _ClubDetailState extends State<ClubDetail> with InputPlayerValidation{
         ),
       ),
       floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            color: Colors.green,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.green,
+            ),
             child: TextButton.icon(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreatePlayerPage(club:widget.club)));
               },
-              icon: Icon(Icons.person_add_rounded,color:Colors.black),
-              label: Text('Thêm cầu thủ',style: TextLine2()),
+              icon: Icon(Icons.person_add_rounded,color:Colors.white),
+              label: Text('Thêm cầu thủ',style: MyButtonText()),
             ),
           ),
-          Spacer(),
           Container(
-            color: Colors.green,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              color: Colors.green,
+            ),
             child: TextButton.icon(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateTeamPage(club:widget.club)));
               },
-              icon: Icon(Icons.add,color:Colors.black),
-              label: Text('Tạo đôi hình',style: TextLine2()),
+              icon: Icon(Icons.add,color:Colors.white),
+              label: Text('Tạo đôi hình',style: MyButtonText()),
             ),
           )
         ],

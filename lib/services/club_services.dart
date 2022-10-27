@@ -28,7 +28,7 @@ Future<List<Club>> fetchClubs () async{
       'Authorization': 'Bearer '+ accessKey,
     }
   );
-  Map map = jsonDecode(response.body);
+  Map<String,dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
   return parseClubs(map['clubList']);
 
 }

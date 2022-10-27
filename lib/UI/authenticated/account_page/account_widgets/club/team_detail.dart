@@ -111,19 +111,16 @@ class _TeamDetailState extends State<TeamDetail> {
           ),
         ),
       ),
-      floatingActionButton: Row(
-        children: [
-          Container(
-            color: Colors.green,
-            child: TextButton.icon(
-              onPressed: () {
-                _showAddingPlayerInTeam();
-              },
-              icon: Icon(Icons.person_add_rounded),
-              label: Text('Thêm cầu thủ'),
-            ),
-          )
-        ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        color: Colors.green,
+        child: TextButton.icon(
+          onPressed: () {
+            _showAddingPlayerInTeam();
+          },
+          icon: Icon(Icons.person_add_rounded,color: Colors.white),
+          label: Text('Thêm cầu thủ vào đội hình',style: MyButtonText()),
+        ),
       ),
     );
   }

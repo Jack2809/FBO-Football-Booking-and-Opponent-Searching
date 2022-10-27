@@ -24,7 +24,7 @@ Future<List<Team>> fetchTeams(int clubId)async{
       }
   );
 
-  Map map = jsonDecode(response.body);
+  Map<String,dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
   return parseTeams(map['teamList']);
 }
 

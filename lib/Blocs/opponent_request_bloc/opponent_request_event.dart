@@ -46,3 +46,5 @@ class CreateOpponentRequest extends OpponentRequestEvent{
   @override
   List<Object> get props => [districtIdList,bookingDate,duration,freetimeStart,freetimeEnd,fieldTypeId,teamId];
 }
+
+

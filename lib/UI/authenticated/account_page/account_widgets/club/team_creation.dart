@@ -98,7 +98,10 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
         ),
       ),
       floatingActionButton: Container(
-        color: Colors.green,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.green,
+        ),
         child: TextButton.icon(
           onPressed: () {
             if(formGlobalKey.currentState!.validate()) {
@@ -108,8 +111,8 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
               Navigator.pop(context);
             }
           },
-          icon: Icon(Icons.add,color:Colors.black),
-          label: Text('Tạo đôi hình',style: TextLine2()),
+          icon: Icon(Icons.add,color:Colors.white),
+          label: Text('Tạo đội hình',style: MyButtonText()),
         ),
       ),
     );

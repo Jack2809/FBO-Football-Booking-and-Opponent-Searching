@@ -2,13 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:football_booking_fbo_mobile/Models/club_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/club/club_card.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
-import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
-import 'package:football_booking_fbo_mobile/services/club_services.dart';
 import 'club_creation_page.dart';
-
  import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_event.dart';
  import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_bloc.dart';
  import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_state.dart';
@@ -87,14 +83,17 @@ import 'club_detail_page.dart';
          ),
        ),
        floatingActionButton: Container(
-         color: Colors.green,
+         decoration:BoxDecoration(
+           borderRadius: BorderRadius.circular(10.0),
+           color: Colors.green,
+         ),
          child: TextButton.icon(
            onPressed: (){
              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ClubCreationPage()),
             );
            },
-           icon: Icon(Icons.person_add_rounded),
-           label: Text('Tạo CLB',style: TextLine1(true)),
+           icon: Icon(Icons.add,color: Colors.white,),
+           label: Text('Tạo CLB',style: MyButtonText()),
          ),
        ),
 

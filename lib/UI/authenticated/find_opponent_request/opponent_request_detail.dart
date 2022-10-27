@@ -2,7 +2,17 @@ import 'package:flutter/material.dart' ;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent_request_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent_request_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/opponent_request_detail_bloc/opponent_request_detail_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/opponent_request_detail_bloc/opponent_request_detail_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/opponent_request_detail_bloc/opponent_request_detail_state.dart';
+import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_state.dart';
+import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_state.dart';
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
+import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_card.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 
 class OpponentRequestDetail extends StatefulWidget{
@@ -16,19 +26,13 @@ class OpponentRequestDetail extends StatefulWidget{
 
 class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
 
-  String timeFormat (String time){
-    var split = time.split(':');
-    String finalTime = split[0]+":"+split[1];
-    return finalTime;
+  @override
+  void initState() {
+    BlocProvider.of<OpponentRequestDetailBloc>(context).add(FetchOpponentRequestDetail(requestId: widget.request.id));
+    BlocProvider.of<RecommendedRequestBloc>(context).add(GetRecommendedRequest(requestId: widget.request.id));
+    BlocProvider.of<WaitingRequestBloc>(context).add(GetWaitingRequest(requestId: widget.request.id));
+    super.initState();
   }
-
-  String dateFormat(String date){
-    var split = date.split('-');
-    String finalDate = split[2]+"-"+split[1]+"-"+split[0];
-    return finalDate;
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,56 +41,151 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
       appBar: AppBar(
         elevation: 0.0,
         bottomOpacity: 0.0,
-        shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
-        title: Text('Chi tiết yêu cầu',style: HeadLine1()),
+        shadowColor: Colors.grey.withOpacity(0.03),
+        backgroundColor: Colors.green,
+        title: Text('Chi tiết yêu cầu',style: WhiteTitleText()),
         centerTitle: true,
         actions: [
-          IconButton(
+          TextButton(
+            child: Text('xóa',style: TextStyle(color: Colors.redAccent)),
               onPressed: (){
                 _showDeleteingOpponentRequest();
-              }, icon: Icon(Icons.delete,color: Colors.redAccent,)),
+              },),
         ],
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-      body: Container(
-        padding: MyPaddingAll(),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Ngày đá',style:HeadLine1()),
-                    Text(dateFormat(widget.request.bookingDate),style:TextLine1(true),),
-                    Text('Khu vực',style:HeadLine1()),
-                    Text("...",style:TextLine1(true)),
-                    Text('Thời gian rảnh',style:HeadLine1()),
-                    Text(timeFormat(widget.request.startFreeTime)+"-"+timeFormat(widget.request.endFreeTime),style:TextLine1(true)),
-                  ],
-                ),
-                SizedBox(width: size.width * 0.1,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Thời lượng',style:HeadLine1()),
-                    Text(widget.request.duration.toString()+"'",style:TextLine1(true)),
-                    Text('Loại sân',style:HeadLine1()),
-                    Text(widget.request.fieldTypeId == 1 ?"5 vs 5" : "7 vs 7",style:TextLine1(true)),
-                    Text('Đội hình',style:HeadLine1()),
-                    Text(widget.request.teamName,style:TextLine1(true)),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 5.0,),
-          ],
+      body: SafeArea(
+        child: Container(
+          padding: MyPaddingLeftRight(),
+          child: BlocBuilder<OpponentRequestDetailBloc,OpponentRequestDetailState>(
+              builder:(context,myState){
+                if(myState is LoadingOpponentRequestDetail){
+                  return Center(child: CircularProgressIndicator(),);
+                }
+                else if(myState is LoadedOpponentRequestDetail){
+                  return Column(
+                    children: <Widget>[
+                   RequestInformationCard(myState: myState.requestDetail),
+
+                      SizedBox(height: 10.0,),
+                      DefaultTabController(
+                          length: 2, // length of tabs
+                          initialIndex: 0,
+                          child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    color: Colors.grey[300]
+                                  ),
+                                  child: TabBar(
+                                    indicator: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      color: Colors.green
+                                    ),
+                                    labelColor: Colors.white,
+                                    unselectedLabelColor: Colors.black,
+                                    tabs: [
+                                      Tab(text: 'Yêu cầu phù hợp'),
+                                      Tab(text: 'Đội đang chờ'),
+
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10.0,),
+                                Container(
+                                      height: size.height * 0.56 - 1, //height of TabBarView
+                                      decoration: BoxDecoration(
+                                          border: Border(top: BorderSide(color: Colors.grey, width: 0.5))
+                                      ),
+                                      child: Expanded(
+                                        child: TabBarView(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                            children: <Widget>[
+                                          BlocBuilder<RecommendedRequestBloc,RecommendedRequestState>(
+                                              builder:(context,state){
+                                                if(state is LoadingRecommendedRequests){
+                                                  return Center(child: CircularProgressIndicator(),);
+                                                }
+                                                else if(state is LoadedRecommendedRequests){
+                                                  if(state.requestList.isEmpty){
+                                                    return Center(child: Text('hiện tại Không có yêu cầu phù hợp nào',style: TextLine1(true),));
+                                                  }else{
+                                                    return ListView.separated(
+                                                        shrinkWrap: true,
+                                                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10.0),
+                                                        padding: MyPaddingAll(),
+                                                        // shrinkWrap: true,
+                                                        itemCount: state.requestList.length,
+                                                        itemBuilder: ((context, index) {
+                                                          return GestureDetector(
+                                                            onTap: (){
+                                                              // Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(request: state.requestList[index],)));
+                                                            },
+                                                            child: RecommendedRequestCard(opponentRequestItem: state.requestList[index],myRequest: myState.requestDetail),
+                                                          );
+                                                        }
+                                                        ));
+                                                  }
+                                                }
+                                                else {
+                                                  return Center(child: Text('Something wrong!!'),);
+                                                }
+                                              }
+                                          ),
+                                          BlocBuilder<WaitingRequestBloc,WaitingRequestState>(
+                                              builder:(context,state){
+                                                if(state is LoadingWaitingRequests){
+                                                  return Center(child: CircularProgressIndicator(),);
+                                                }
+                                                else if(state is LoadedWaitingRequests){
+                                                  if(state.requestList.isEmpty){
+                                                    return Center(child: Text('Hiện tại không có đội đang chờ nào',style: Black12TextLine(false),));
+                                                  }else{
+                                                    return ListView.separated(
+                                                        shrinkWrap: true,
+                                                        physics: NeverScrollableScrollPhysics(),
+                                                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10.0),
+                                                        padding: MyPaddingAll(),
+                                                        // shrinkWrap: true,
+                                                        itemCount: state.requestList.length,
+                                                        itemBuilder: ((context, index) {
+                                                          return GestureDetector(
+                                                            onTap: (){
+                                                              // Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(request: state.requestList[index],)));
+                                                            },
+                                                            child: WaitingRequestCard(requestItem: state.requestList[index]),
+                                                          );
+                                                        }
+                                                        ));
+                                                  }
+                                                }
+                                                else {
+                                                  return Center(child: Text('Something wrong!!'),);
+                                                }
+                                              }
+                                          ),
+                                        ]),
+                                      )
+                                  ),
+
+                              ])
+                      ),
+                    ],
+                  );
+                }else{
+                  return Text('Something went wrong');
+                }
+
+              }
+          ),
         ),
       ),
     );
@@ -125,3 +224,6 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
     );
   }
 }
+
+
+

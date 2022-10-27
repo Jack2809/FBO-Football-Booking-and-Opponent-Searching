@@ -28,7 +28,19 @@ class _ClubCreationPageState extends State<ClubCreationPage> with InputClubValid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tạo CLB'),
+        title: Text('Tạo CLB', style: TextLine1(true)),
+        centerTitle: true,
+        elevation: 0.0,
+        bottomOpacity: 0.0,
+        shadowColor: Colors.grey.withOpacity(0.02),
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+        ),
+
       ),
       body: BlocListener<ClubBloc,ClubState>(
         listener: (context, state) {
@@ -82,7 +94,10 @@ class _ClubCreationPageState extends State<ClubCreationPage> with InputClubValid
               // ),
 
               Container(
-                color: Colors.green,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.green,
+                ),
                 child: TextButton.icon(
                   onPressed: () {
                     if(formGlobalKey.currentState!.validate()){
@@ -93,8 +108,8 @@ class _ClubCreationPageState extends State<ClubCreationPage> with InputClubValid
                     }
 
                   },
-                  icon: Icon(Icons.person_add_rounded),
-                  label: Text('Tạo CLB'),
+                  icon: Icon(Icons.add,color: Colors.white),
+                  label: Text('Tạo CLB',style: MyButtonText()),
                 ),
               )
             ],

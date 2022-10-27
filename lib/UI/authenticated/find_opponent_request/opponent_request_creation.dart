@@ -52,6 +52,8 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
 
   bool _is5vs5 = true ;
 
+  bool _isInterested = true;
+
   List<int> _selectedDistrictIds = [];
 
   List<String> _selectedDistrictsStr = [];
@@ -157,7 +159,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Chọn ngày đá',style: HeadLine1(),),
+              Text('Ngày đá',style: HeadLine1(),),
               SizedBox(height: 10.0,),
               Container(
                 decoration: BoxDecoration(
@@ -180,7 +182,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                 ),
               ),
               SizedBox(height: 10.0,),
-              Text('Chọn Thời gian rảnh',style: HeadLine1(),),
+              Text('Thời gian rảnh',style: HeadLine1(),),
               SizedBox(height: 10.0,),
               Row(
                 children: [
@@ -219,7 +221,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
               ),
               Text(validFreeTimeStr == null || validFreeTimeStr == "" ? "":validFreeTimeStr!,style: ErrorText(),),
               SizedBox(height: 10.0,),
-              Text('Thời lượng mong muốn đá ',style: HeadLine1()),
+              Text('Thời lượng',style: HeadLine1()),
               SizedBox(height: 20.0,),
               Container(
                 decoration: BoxDecoration(
@@ -242,7 +244,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                 ),
               ),
               SizedBox(height: 10.0,),
-              Text('Loại sân mong muốn đá ',style: HeadLine1()),
+              Text('Loại sân',style: HeadLine1()),
               SizedBox(height: 10.0,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -282,8 +284,48 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                   ),
                 ],
               ),
+              Text('Thể thức thi đấu',style: HeadLine1()),
               SizedBox(height: 10.0,),
-              Text('Khu vực mong muốn đá',style: HeadLine1()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: size.width * 0.41,
+                    decoration: BoxDecoration(
+                      color: _isInterested ? Colors.green : primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    child: TextButton.icon(
+                        onPressed: (){
+                          setState(() {
+                            _isInterested = true;
+                          });
+                        },
+                        icon: Icon(Icons.sports_soccer,color:_isInterested?Colors.white:Colors.black,size: 20),
+                        label: Text('Giao lưu',style: _isInterested ? MyButtonText() : MyButtonText1(),)),
+                  ),
+
+                  Container(
+                    width: size.width * 0.41,
+                    decoration: BoxDecoration(
+                      color: _isInterested ? primaryColor : Colors.green,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    child: TextButton.icon(
+                        onPressed: (){
+                          setState(() {
+                            _isInterested = false ;
+                          });
+                        },
+                        icon: Icon(Icons.sports_soccer,color:_isInterested?Colors.black:Colors.white,size: 20,),
+                        label: Text('Tranh tài',style: _isInterested?MyButtonText1():MyButtonText(),)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0,),
+              Text('Khu vực',style: HeadLine1()),
               SizedBox(height: 10.0,),
               BlocBuilder<DistrictBloc,DistrictState>(
                   builder:(context,state){

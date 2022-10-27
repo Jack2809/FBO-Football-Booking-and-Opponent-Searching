@@ -30,18 +30,18 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
-        title: Text('Yêu cầu của tôi',style: HeadLine1()),
+        backgroundColor: Colors.green,
+        title: Text('Yêu cầu của tôi',style: WhiteTitleText()),
         // centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.add,color: Colors.green),
+            icon: Icon(Icons.add,color: Colors.white),
             onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
             },
           ),
           IconButton(
-            icon: Icon(Icons.search,color: Colors.green),
+            icon: Icon(Icons.search,color: Colors.white),
             onPressed: (){
 
             },
