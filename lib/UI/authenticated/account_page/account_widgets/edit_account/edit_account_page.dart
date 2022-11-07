@@ -26,22 +26,21 @@ class _EditAccountPageState extends State<EditAccountPage> {
     TextEditingController addressC = TextEditingController(text: widget.user.address);
     TextEditingController phoneC  = TextEditingController(text: widget.user.phoneNumber);
 
-    String name = widget.user.name;
 
     Size size = getSize(context);
     return  Scaffold(
         appBar: AppBar(
-          title: Text('Chỉnh sửa thông tin',style: TextLine1(true)),
+          title: Text('Chỉnh sửa thông tin',style: WhiteTitleText()),
           centerTitle: true,
           elevation: 0.0,
           bottomOpacity: 0.0,
           shadowColor: Colors.grey.withOpacity(0.02),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.green,
           leading: IconButton(
             onPressed: (){
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back_ios,color: Colors.black),
+            icon: Icon(Icons.arrow_back_ios,color: Colors.white),
           ),
         ),
         resizeToAvoidBottomInset: true,

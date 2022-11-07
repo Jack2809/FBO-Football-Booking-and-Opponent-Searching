@@ -26,11 +26,11 @@ class DeleteTeamPlayer extends PlayerTeamEvent{
   List<Object> get props => [teamId,playerId];
 }
 
-class AddTeamPlayers extends PlayerTeamEvent{
+class AddTeamPlayer extends PlayerTeamEvent{
   final int teamId;
-  List<int> playerIdList;
-  AddTeamPlayers({required this.teamId,required this.playerIdList});
+  PlayerCreationModel newPlayer;
+  AddTeamPlayer({required this.teamId,required this.newPlayer});
 
   @override
-  List<Object> get props => [teamId,playerIdList];
+  List<Object> get props => [teamId,newPlayer];
 }

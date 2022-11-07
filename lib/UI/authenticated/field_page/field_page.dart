@@ -53,15 +53,15 @@ class _FieldPageState extends State<FieldPage> {
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
-        title: Text('Sân bóng',style: HeadLine1()),
+        backgroundColor: Colors.green,
+        title: Text('Sân bóng',style: WhiteTitleText()),
         centerTitle: true,
         actions: [
           IconButton(
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SearchFieldPage()));
               },
-              icon: Icon(Icons.search,color: Colors.black,))
+              icon: Icon(Icons.search,color: Colors.white,))
         ],
       ),
       

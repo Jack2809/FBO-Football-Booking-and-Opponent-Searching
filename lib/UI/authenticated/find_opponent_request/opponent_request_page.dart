@@ -5,7 +5,6 @@ import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent
 import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent_request_state.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_card.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
-
 import 'opponent_request_creation.dart';
 import 'opponent_request_detail.dart';
 
@@ -30,18 +29,20 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
-        title: Text('Yêu cầu của tôi',style: HeadLine1()),
+        backgroundColor: Colors.green,
+        title: Text('Yêu cầu của tôi',style: WhiteTitleText()),
         // centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.add,color: Colors.green),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
+            icon: Icon(Icons.add,color: Colors.white),
+            onPressed: () async{
+              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
+              if(!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
             },
           ),
           IconButton(
-            icon: Icon(Icons.search,color: Colors.green),
+            icon: Icon(Icons.search,color: Colors.white),
             onPressed: (){
 
             },

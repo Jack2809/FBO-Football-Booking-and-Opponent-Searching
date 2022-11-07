@@ -12,6 +12,12 @@ String timeFormat (String time){
   return finalTime;
 }
 
+String dateFormat(String date){
+  var split = date.split('-');
+  String finalDate = split[2]+"-"+split[1]+"-"+split[0];
+  return finalDate;
+}
+
 
 TextStyle HeadLine (){
   return TextStyle(
@@ -21,11 +27,16 @@ TextStyle HeadLine (){
   );
 }
 
+String convertDateTimeToTimeOfDay(BuildContext context,String dateTime){
+  DateTime _dateTime = DateTime.parse(dateTime);
+  return TimeOfDay.fromDateTime(_dateTime).format(context);
+}
+
 TextStyle HeadLine1 (){
   return TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.green,
-    fontSize: 25.0,
+    fontSize: 20.0,
   );
 }
 
@@ -53,6 +64,15 @@ TextStyle TextLine1 (bool isBold){
   );
 }
 
+TextStyle Black12TextLine (bool isBold){
+  return TextStyle(
+    fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+    color: Colors.black26,
+    fontSize: 20.0,
+    overflow: TextOverflow.ellipsis,
+  );
+}
+
 TextStyle TextLine3 (bool isBold){
   return TextStyle(
     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
@@ -73,8 +93,13 @@ TextStyle TextLine2 (){
 }
 
 EdgeInsetsGeometry MyPaddingAll(){
+  return EdgeInsets.all(5.0);
+}
+
+EdgeInsetsGeometry MyPaddingAll10(){
   return EdgeInsets.all(10.0);
 }
+
 
 EdgeInsetsGeometry MyPaddingLeftRight(){
   return EdgeInsets.only(
@@ -83,11 +108,29 @@ EdgeInsetsGeometry MyPaddingLeftRight(){
   );
 }
 
-TextStyle MyButtonText (){
+TextStyle WhiteTitleText (){
   return TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.white,
     fontSize: 20.0,
+  );
+}
+
+
+
+TextStyle MyButtonText (){
+  return TextStyle(
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    fontSize: 15.0,
+  );
+}
+
+TextStyle MyButtonText1 (){
+  return TextStyle(
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    fontSize: 15.0,
   );
 }
 

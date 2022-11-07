@@ -12,4 +12,9 @@ class District {
       name: json['districtName'] as String,
     );
   }
+
+  @override
+  String toString() {
+    return ' $name';
+  }
 }

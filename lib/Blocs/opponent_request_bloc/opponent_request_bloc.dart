@@ -25,11 +25,12 @@ class OpponentRequestBloc extends Bloc<OpponentRequestEvent,OpponentRequestState
 
     on<CreateOpponentRequest> ((event,emit) async{
       emit(LoadingOpponentRequests());
-      var createdOpponentRequest = await createOpponentRequest(event.districtIdList, event.bookingDate, event.duration, event.freetimeStart, event.freetimeEnd, event.fieldTypeId, event.teamId);
+      var createdOpponentRequest = await createOpponentRequest(event.districtIdList, event.bookingDate, event.duration, event.freetimeStart, event.freetimeEnd, event.fieldTypeId, event.teamId,event.isRivalry);
       log("message:"+createdOpponentRequest);
       var fetchedRequestListAfterCreation = await fetchOpponentRequests();
       emit(LoadedOpponentRequests(requestList:fetchedRequestListAfterCreation ));
 
     });
+
   }
 }

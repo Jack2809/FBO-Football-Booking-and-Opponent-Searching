@@ -8,6 +8,7 @@ class Club{
   final int id;
   final String name;
   // final String description;
+  // final String description;
   // final List<Player> playerList;
 
 Club({required this.id,required this.name});
@@ -16,6 +17,7 @@ Club({required this.id,required this.name});
     return Club(
       id: json['id'] as int,
       name: json['clubName'] as String,
+      // description: json['description'] as String
     );
   }
 

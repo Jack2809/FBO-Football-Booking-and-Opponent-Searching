@@ -11,21 +11,21 @@ class TeamBloc extends Bloc<TeamEvent,TeamState>{
   TeamBloc() : super (LoadingTeams()){
     on<FetchTeams> ((event,emit) async{
       emit(LoadingTeams());
-      var fetchedTeamList = await fetchTeams(event.clubId);
+      var fetchedTeamList = await fetchTeams();
       emit(LoadedTeams(teamList: fetchedTeamList));
     });
 
     on<CreateTeam> ((event,emit) async{
       emit(LoadingTeams());
-      var createdTeam = await createTeam(event.clubId, event.teamName);
-      var fetchedTeamListAfterCreation = await fetchTeams(event.clubId);
+      var createdTeam = await createTeam(event.teamName);
+      var fetchedTeamListAfterCreation = await fetchTeams();
       emit(LoadedTeams(teamList: fetchedTeamListAfterCreation));
     });
-
+    //
     on<DeleteTeam> ((event,emit) async{
       emit(LoadingTeams());
-      var createdTeam = await deleteTeam(event.teamId);
-      var fetchedTeamListAfterDeletion = await fetchTeams(event.clubId);
+      var deletedTeam = await deleteTeam(event.teamId);
+      var fetchedTeamListAfterDeletion = await fetchTeams();
       emit(LoadedTeams(teamList: fetchedTeamListAfterDeletion));
     });
 

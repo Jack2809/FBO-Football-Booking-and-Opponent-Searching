@@ -14,24 +14,24 @@ List<Team> parseTeams(List responseBody){
 
 }
 
-Future<List<Team>> fetchTeams(int clubId)async{
+Future<List<Team>> fetchTeams()async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? '';
   var response = await http.get(
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/clubs/'+clubId.toString()+'/teams?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,
       }
   );
 
-  Map map = jsonDecode(response.body);
+  Map<String,dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
   return parseTeams(map['teamList']);
 }
 
-Future<String> createTeam (int clubId,String teamName) async {
+Future<String> createTeam (String teamName) async {
   String accessKey = UserAccessKey.getUserAccessKey() ?? '';
   var response = await http.post(
-    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/clubs/'+clubId.toString()+'/teams'),
+    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,

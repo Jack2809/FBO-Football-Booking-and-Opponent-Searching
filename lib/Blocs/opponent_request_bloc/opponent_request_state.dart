@@ -22,3 +22,4 @@ class LoadedOpponentRequests extends OpponentRequestState{
   List<Object> get props => [requestList];
 
 }
+
