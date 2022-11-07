@@ -11,6 +11,14 @@ Widget FieldCard (Field field,Size size){
     decoration: BoxDecoration(
       color: primaryColor,
       borderRadius: BorderRadius.circular(10.0),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black38,
+          blurRadius: 10.0,
+          spreadRadius: 2.0,
+          offset: Offset(5.0,0.0),
+        ),
+      ]
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,

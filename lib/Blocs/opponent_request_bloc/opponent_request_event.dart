@@ -32,6 +32,7 @@ class CreateOpponentRequest extends OpponentRequestEvent{
   final int duration;
   final int teamId;
   final int fieldTypeId;
+  final int isRivalry;
 
   CreateOpponentRequest({
     required this.districtIdList,
@@ -40,11 +41,12 @@ class CreateOpponentRequest extends OpponentRequestEvent{
     required this.freetimeStart,
     required this.freetimeEnd,
     required this.fieldTypeId,
-    required this.teamId
+    required this.teamId,
+    required this.isRivalry
 });
 
   @override
-  List<Object> get props => [districtIdList,bookingDate,duration,freetimeStart,freetimeEnd,fieldTypeId,teamId];
+  List<Object> get props => [districtIdList,bookingDate,duration,freetimeStart,freetimeEnd,fieldTypeId,teamId,isRivalry];
 }
 
 

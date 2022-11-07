@@ -27,6 +27,11 @@ TextStyle HeadLine (){
   );
 }
 
+String convertDateTimeToTimeOfDay(BuildContext context,String dateTime){
+  DateTime _dateTime = DateTime.parse(dateTime);
+  return TimeOfDay.fromDateTime(_dateTime).format(context);
+}
+
 TextStyle HeadLine1 (){
   return TextStyle(
     fontWeight: FontWeight.bold,

@@ -36,16 +36,20 @@ Future<String> deletePlayerInTeam(int teamId,int playerId) async{
   return response.body;
 }
 
-Future<String> addPlayersInTeam (int teamId,List<int> playerIdList) async {
+Future<String> addPlayerInTeam (int teamId,PlayerCreationModel player) async {
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.post(
-    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams/'+teamId.toString()+'/addPlayers'),
+    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams/'+teamId.toString()+'/players'),
     headers:<String,String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer '+ accessKey,
     },
       body :jsonEncode(<String,dynamic>{
-        "playerIds" : playerIdList
+        "age": player.age,
+        "email": player.email,
+        "jerseyNo": player.jerseyNo,
+        "phone": player.phone,
+        "playerName": player.name
       })
   );
   return response.body;

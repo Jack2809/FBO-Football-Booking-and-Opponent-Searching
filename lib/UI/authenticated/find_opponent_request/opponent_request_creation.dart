@@ -1,10 +1,6 @@
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_bloc.dart';
-import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_event.dart';
-import 'package:football_booking_fbo_mobile/Blocs/club_bloc/club_state.dart';
 import 'package:football_booking_fbo_mobile/Blocs/district_bloc/district_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/district_bloc/district_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/district_bloc/district_state.dart';
@@ -19,7 +15,6 @@ import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:group_button/group_button.dart';
 import 'package:interval_time_picker/interval_time_picker.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
-import 'package:intl/intl.dart';
 
 
 
@@ -33,7 +28,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
   @override
   void initState() {
     BlocProvider.of<DistrictBloc>(context).add(FetchDistricts());
-    BlocProvider.of<ClubBloc>(context).add(FetchClubs());
+    BlocProvider.of<TeamBloc>(context).add(FetchTeams());
 
     super.initState();
   }
@@ -46,19 +41,16 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
 
   int _duration = 60 ;
 
-  int? _clubId ;
 
   int? _teamId ;
 
   bool _is5vs5 = true ;
 
-  bool _isInterested = true;
+  bool _isRivalry = false;
 
   List<int> _selectedDistrictIds = [];
 
   List<String> _selectedDistrictsStr = [];
-
-  bool _isFirstLoadTeam = true;
 
   String? validFreeTimeStr ;
 
@@ -106,22 +98,12 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
     }
   }
 
-  void _clubDropdownCallBack(int? selectedClubId){
-    if(selectedClubId is int){
-      setState(() {
-        _clubId = selectedClubId;
-        _isFirstLoadTeam = false ;
-        log("clubid:"+_clubId.toString());
-      });
-      BlocProvider.of<TeamBloc>(context).add(FetchTeams(clubId: _clubId!));
-    }
-  }
+
 
   void _teamDropdownCallBack(int? selectedTeamId){
     if(selectedTeamId is int){
       setState(() {
         _teamId = selectedTeamId;
-        _isFirstLoadTeam = false;
         log("teamid:"+_teamId.toString());
       });
 
@@ -132,29 +114,27 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
   @override
   Widget build(BuildContext context) {
 
-
-
     Size size = getSize(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
-        title: Text('Tạo Yêu Cầu',style: HeadLine1()),
+        backgroundColor: Colors.green,
+        title: Text('Tạo Yêu Cầu',style: WhiteTitleText()),
         centerTitle: true,
         actions: [
 
-        ],
+          ],
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
       body: Container(
-        padding: MyPaddingAll(),
+        padding: MyPaddingAll10(),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,6 +145,13 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5.0,
+                      spreadRadius: 5.0,
+                    )
+                  ]
                 ),
                 child: SizedBox(
                   height: size.height * 0.15,
@@ -292,35 +279,35 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                   Container(
                     width: size.width * 0.41,
                     decoration: BoxDecoration(
-                      color: _isInterested ? Colors.green : primaryColor,
+                      color: !_isRivalry ? Colors.green : primaryColor,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.black12),
                     ),
                     child: TextButton.icon(
                         onPressed: (){
                           setState(() {
-                            _isInterested = true;
+                            _isRivalry = false;
                           });
                         },
-                        icon: Icon(Icons.sports_soccer,color:_isInterested?Colors.white:Colors.black,size: 20),
-                        label: Text('Giao lưu',style: _isInterested ? MyButtonText() : MyButtonText1(),)),
+                        icon: Icon(Icons.sports_soccer,color:!_isRivalry?Colors.white:Colors.black,size: 20),
+                        label: Text('Giao lưu',style: !_isRivalry ? MyButtonText() : MyButtonText1(),)),
                   ),
 
                   Container(
                     width: size.width * 0.41,
                     decoration: BoxDecoration(
-                      color: _isInterested ? primaryColor : Colors.green,
+                      color: _isRivalry ? Colors.green : primaryColor,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.black12),
                     ),
                     child: TextButton.icon(
                         onPressed: (){
                           setState(() {
-                            _isInterested = false ;
+                            _isRivalry = true ;
                           });
                         },
-                        icon: Icon(Icons.sports_soccer,color:_isInterested?Colors.black:Colors.white,size: 20,),
-                        label: Text('Tranh tài',style: _isInterested?MyButtonText1():MyButtonText(),)),
+                        icon: Icon(Icons.sports_soccer,color:!_isRivalry?Colors.black:Colors.white,size: 20,),
+                        label: Text('Tranh tài',style: !_isRivalry?MyButtonText1():MyButtonText(),)),
                   ),
                 ],
               ),
@@ -358,68 +345,17 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                   }
               ),
               Text(validDistrictStr == null || validDistrictStr == "" ? "":validDistrictStr!,style: ErrorText(),),
-
-              SizedBox(height: 10.0,),
-              Text('Chọn CLB',style: HeadLine1()),
-              SizedBox(height: 10.0,),
-              BlocBuilder<ClubBloc,ClubState>(
-                  builder:(context,state){
-                    if(state is LoadingClubs){
-                      return Center(child: CircularProgressIndicator(),);
-                    }
-                    else if(state is LoadedClubs){
-                      if(state.clubList.isEmpty){
-                        return Center(child: Text('Vui lòng tạo CLB và đội hình trước'),);
-                      }else{
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black12),
-                          ),
-                          child: Center(
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                  isExpanded: true,
-                                  value: _clubId,
-                                  items: state.clubList
-                                      .map((club) =>
-                                      DropdownMenuItem<int>(
-                                        value: club.id,
-                                        child: Center(
-                                          child: Text(
-                                            club.name,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      ))
-                                      .toList(),
-                                onChanged: _clubDropdownCallBack,
-                                  ),
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                    else {
-                      return Center(child: Text('Something wrong!!'),);
-                    }
-                  }
-              ),
-              Text(validClubStr == null || validClubStr == "" ? "":validClubStr!,style: ErrorText(),),
               SizedBox(height: 10.0,),
               BlocBuilder<TeamBloc,TeamState>(
                   builder:(context,state){
                     if(state is LoadingTeams){
-                     return  _isFirstLoadTeam ?  SizedBox() : Center(child: CircularProgressIndicator(),);
+                     return Center(child: CircularProgressIndicator(),);
                     }
                     else if(state is LoadedTeams){
                       if(state.teamList.isEmpty){
                         return Center(child: Text('không có đội hình nào trong CLB này'),);
                       }else{
-                        return _isFirstLoadTeam?SizedBox():Column(
+                        return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 10.0,),
@@ -467,7 +403,11 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
               // Text(validTeamStr == null || validTeamStr == "" ? "":validTeamStr!,style: ErrorText(),),
 
               Container(
-                color: Colors.green,
+                width: size.width * 0.9,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 child: TextButton.icon(
                   onPressed: () {
 
@@ -475,17 +415,15 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                     // DateTime freetimeStart1 = DateTime(_selectedDate.year,_selectedDate.month,_selectedDate.day,_freeTimeStart.hour,_freeTimeStart.minute,0);
                     // DateTime freetimeEnd1 = DateTime(_selectedDate.year,_selectedDate.month,_selectedDate.day,_freeTimeEnd.hour,_freeTimeEnd.minute,0);
 
-                    if(isValidFreeTimeValid(_freeTimeStart,_freeTimeEnd,_duration)!="" || isSelectedClub(_clubId)!="" || isSelectedTeam(_teamId)!="" || isSelectedDistrict(_selectedDistrictIds)!=""){
+                    if(isValidFreeTimeValid(_freeTimeStart,_freeTimeEnd,_duration)!="" || isSelectedTeam(_teamId)!="" || isSelectedDistrict(_selectedDistrictIds)!=""){
                       setState(() {
                         validFreeTimeStr = isValidFreeTimeValid(_freeTimeStart,_freeTimeEnd,_duration);
-                        validClubStr = isSelectedClub(_clubId);
                         validTeamStr = isSelectedTeam(_teamId);
                         validDistrictStr = isSelectedDistrict(_selectedDistrictIds);
                       });
                     }else{
                       setState(() {
                         validFreeTimeStr = isValidFreeTimeValid(_freeTimeStart,_freeTimeEnd,_duration);
-                        validClubStr = isSelectedClub(_clubId);
                         validTeamStr = isSelectedTeam(_teamId);
                         validDistrictStr = isSelectedDistrict(_selectedDistrictIds);
                       });
@@ -496,24 +434,23 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                       int teamId = _teamId!;
                       int fieldTypeId = _is5vs5 ? 1 : 2;
                       List<int> districtIdList = _selectedDistrictIds;
-                      // log("booking date: "+_selectedDate.toString());
-                      // log("freetime start: "+_f.toString());
-                      // log("freetime end: "+freetimeEnd.toString());
+                      int isRivalry = _isRivalry ? 1 : 0 ;
+                      // log("booking date: " + bookingDate);
+                      // log("freetime start: "+freetimeStart);
+                      // log("freetime end: "+freetimeEnd);
                       // log("duration: "+duration.toString());
                       // log("teamid: "+teamId.toString());
                       // log("fieldtype: "+fieldTypeId.toString());
                       // log("district: "+districtIdList.join(","));
+                      // log('isRivalry'+ isRivalry.toString());
                       BlocProvider.of<OpponentRequestBloc>(context).add(
-                          CreateOpponentRequest(districtIdList: districtIdList, bookingDate: bookingDate, duration: duration, freetimeStart: freetimeStart, freetimeEnd: freetimeEnd, fieldTypeId: fieldTypeId, teamId: teamId));
-                      setState(() {
-                        _isFirstLoadTeam = true;
-                      });
-                      Navigator.pop(context);
+                          CreateOpponentRequest(districtIdList: districtIdList, bookingDate: bookingDate, duration: duration, freetimeStart: freetimeStart, freetimeEnd: freetimeEnd, fieldTypeId: fieldTypeId, teamId: teamId,isRivalry: isRivalry));
+                      Navigator.pop(context,'Yêu cầu đã được tạo');
                     }
 
                   },
-                  icon: Icon(Icons.add,color:Colors.black),
-                  label: Text('Tạo Yêu Cầu',style: TextLine2()),
+                  icon: Icon(Icons.add,color:Colors.white),
+                  label: Text('Tạo Yêu Cầu',style: WhiteTitleText()),
                 ),
               ),
 

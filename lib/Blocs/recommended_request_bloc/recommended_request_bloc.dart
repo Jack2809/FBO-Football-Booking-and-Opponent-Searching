@@ -1,5 +1,7 @@
 
 
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_state.dart';
@@ -15,6 +17,7 @@ class RecommendedRequestBloc extends Bloc<RecommendedRequestEvent,RecommendedReq
     });
     on<SendChallengeRequest>((event, emit) async {
       var sentChallenge = await sendChallenge(event.myRequestId, event.opponentRequestId, event.myTeamId);
+      log(sentChallenge);
     });
 
 

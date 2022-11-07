@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:football_booking_fbo_mobile/Models/club_model.dart';
+import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 
-class ClubCard extends StatelessWidget {
-  Club club ;
-  ClubCard({required this.club});
+class TeamCard extends StatelessWidget {
+  Team team ;
+  TeamCard({required this.team});
   @override
   Widget build(BuildContext context) {
     Size size = getSize(context);
     return Container(
       height: size.height * 0.2,
-      padding: MyPaddingAll(),
+      padding: MyPaddingAll10(),
       decoration: BoxDecoration(
           color: primaryColor,
           borderRadius: BorderRadius.circular(10.0),
-
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5.0,
+            spreadRadius: 2.0
+          ),
+        ]
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,13 +40,11 @@ class ClubCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(width: size.width * 0.8,child: Text('Tên CLB: '+ club.name,)),
+                  Container(width: size.width * 0.8,child: Text('Tên CLB: '+ team.name,)),
 
                   Container(width: size.width * 0.8 ,child: Text('Số thành viên: ' ,)),
 
-                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ club.name,)),
-
-
+                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.name,)),
 
 
                 ],

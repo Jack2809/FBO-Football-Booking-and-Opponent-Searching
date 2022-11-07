@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_event.dart';
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_detail.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
@@ -116,7 +120,7 @@ class OpponentRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = getSize(context);
     return Container(
-      height: size.height * 0.18,
+      height: size.height * 0.21,
       padding: MyPaddingAll(),
       decoration: BoxDecoration(
           color: primaryColor,
@@ -153,6 +157,15 @@ class OpponentRequestCard extends StatelessWidget {
                   child: requestItem.fieldTypeId == 1? Text("5 vs 5",style: MyButtonText()) : Text("7 vs 7",style: MyButtonText()),
                   backgroundColor: Colors.green,
                 ),
+                SizedBox(height: 10.0,),
+                Container(
+                  padding: MyPaddingAll(),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.green,
+                  ),
+                  child: requestItem.isRivalry ? Text('Tranh Tài',style:MyButtonText(),) : Text('Giao Hữu',style: MyButtonText()),
+                ),
               ],
             ),
           ),
@@ -170,6 +183,8 @@ class OpponentRequestCard extends StatelessWidget {
                 Text(requestItem.duration.toString()+" phút",style:HeadLine1()),
                 Text('Thời gian rảnh',style: TextLine1(true)),
                 Text(timeFormat(requestItem.startFreeTime) +"-"+timeFormat(requestItem.endFreeTime),style:HeadLine1()),
+                Text('Ngày đá',style: TextLine1(true)),
+                Text(dateFormat(requestItem.bookingDate),style:HeadLine1()),
 
 
 
@@ -310,11 +325,17 @@ class _RecommendedRequestCardState extends State<RecommendedRequestCard> {
   }
 }
 
-class WaitingRequestCard extends StatelessWidget {
+class WaitingRequestCard extends StatefulWidget {
   WaitingRequest requestItem;
+  OpponentRequestDetailModel myRequest;
 
-  WaitingRequestCard({required this.requestItem});
+  WaitingRequestCard({required this.requestItem,required this.myRequest});
 
+  @override
+  State<WaitingRequestCard> createState() => _WaitingRequestCardState();
+}
+
+class _WaitingRequestCardState extends State<WaitingRequestCard> {
   @override
   Widget build(BuildContext context) {
     Size size = getSize(context);
@@ -348,7 +369,7 @@ class WaitingRequestCard extends StatelessWidget {
                     text: TextSpan(
                         children: [
                           TextSpan(text: 'Đội hình: ',style: HeadLine1()),
-                          TextSpan(text: requestItem.teamName,style:TextLine1(true)),
+                          TextSpan(text: widget.requestItem.teamName,style:TextLine1(true)),
                         ]
                     ),
                   ),
@@ -366,7 +387,7 @@ class WaitingRequestCard extends StatelessWidget {
             Row(
               children: [
                 Text('Thời gian rảnh: ',style: HeadLine1()),
-                Text(timeFormat(requestItem.startFreeTime)+"-"+timeFormat(requestItem.endFreeTime),style:TextLine1(true)),
+                Text(timeFormat(widget.requestItem.startFreeTime)+"-"+timeFormat(widget.requestItem.endFreeTime),style:TextLine1(true)),
               ],
             ),
             SizedBox(height: 5.0),
@@ -377,7 +398,7 @@ class WaitingRequestCard extends StatelessWidget {
                     text: TextSpan(
                         children: [
                           TextSpan(text: 'Khu vực: ',style: HeadLine1()),
-                          TextSpan(text: requestItem.districts,style:TextLine1(true)),
+                          TextSpan(text: widget.requestItem.districts,style:TextLine1(true)),
                         ]
                     ),
                   ),
@@ -394,12 +415,99 @@ class WaitingRequestCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: TextButton.icon(
-                    onPressed: (){},
+                    onPressed: (){
+                      log("my request id:"+widget.myRequest.id.toString());
+                      log("opponent request id:"+widget.requestItem.id.toString());
+                      log("opponent team id :"+widget.requestItem.teamId.toString());
+                      BlocProvider.of<WaitingRequestBloc>(context).add(AcceptWaitingRequestChallenge(myRequestId: widget.myRequest.id, opponentRequestId: widget.requestItem.id, opponentTeamId: widget.requestItem.teamId));
+                    },
                     icon: Icon(RpgAwesome.crossed_swords,color: Colors.white),
                     label: Text('Chấp nhận',style: MyButtonText(),)),
               ),
             ),
 
+
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MatchedPostCard extends StatelessWidget {
+  MatchedRequest matchedRequest;
+
+  MatchedPostCard({required this.matchedRequest});
+  @override
+  Widget build(BuildContext context) {
+    Size size = getSize(context);
+    return Container(
+      height: size.height * 0.20,
+      width: size.width * 0.9,
+      padding: MyPaddingAll10(),
+      decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: const Offset(
+                0.0,
+                2.0,
+              ),
+              blurRadius: 5.0,
+              spreadRadius: 1.0,
+            ),
+          ]
+      ),
+      child: Container(
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: RichText(
+                    text: TextSpan(
+                        children: [
+                          TextSpan(text: 'Đội hình: ',style: HeadLine1()),
+                          TextSpan(text: matchedRequest.teamName,style:TextLine1(true)),
+                        ]
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5.0),
+            Row(
+              children: [
+                Text('Điểm trình độ: ',style: HeadLine1()),
+                Text("...",style:TextLine1(true)),
+              ],
+            ),
+            SizedBox(height: 5.0),
+            Row(
+              children: [
+                Text('Thời gian rảnh: ',style: HeadLine1()),
+                Text(timeFormat(matchedRequest.startFreeTime)+"-"+timeFormat(matchedRequest.endFreeTime),style:TextLine1(true)),
+              ],
+            ),
+            SizedBox(height: 5.0),
+            Row(
+              children: [
+                Expanded(
+                  child: RichText(
+                    text: TextSpan(
+                        children: [
+                          TextSpan(text: 'Khu vực: ',style: HeadLine1()),
+                          TextSpan(text: matchedRequest.districts,style:TextLine1(true)),
+                        ]
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
 
           ],

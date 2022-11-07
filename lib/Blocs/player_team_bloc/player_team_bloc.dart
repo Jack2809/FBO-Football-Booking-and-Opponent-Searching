@@ -20,12 +20,12 @@ class PlayerTeamBloc extends Bloc<PlayerTeamEvent,PlayerTeamState>{
       emit(LoadedTeamPlayers(teamPlayersList:fetchedTeamPlayers ));
     });
 
-    on<AddTeamPlayers> ((event,emit) async{
+    on<AddTeamPlayer> ((event,emit) async{
       emit(LoadingTeamPlayers());
-      var addedTeamPlayers = await addPlayersInTeam(event.teamId,event.playerIdList);
+      var addedTeamPlayers = await addPlayerInTeam(event.teamId,event.newPlayer);
       log("add message:"+addedTeamPlayers);
       var fetchedTeamPlayersAfterAddition = await fetchTeamPlayers(event.teamId);
-      emit(LoadedTeamPlayers(teamPlayersList:fetchedTeamPlayersAfterAddition ));
+      emit(LoadedTeamPlayers(teamPlayersList:fetchedTeamPlayersAfterAddition));
     });
 
     on<DeleteTeamPlayer> ((event,emit) async{
