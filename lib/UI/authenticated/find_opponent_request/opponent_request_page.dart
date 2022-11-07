@@ -5,7 +5,6 @@ import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent
 import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent_request_state.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_card.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
-
 import 'opponent_request_creation.dart';
 import 'opponent_request_detail.dart';
 
@@ -36,8 +35,10 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.add,color: Colors.white),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
+            onPressed: () async{
+              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
+              if(!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
             },
           ),
           IconButton(

@@ -1,9 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/field_page/field_widgets/field_booking.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
-
 import '../../../../Models/field_model.dart';
+
+List<String> imageList = [
+  'https://daihoc.fpt.edu.vn/wp-content/uploads/2020/05/89354889_2726704134050019_4494620933813698560_o.jpg',
+  'https://dnuni.fpt.edu.vn/wp-content/uploads/2020/03/COF_5460-1536x864.png',
+  'https://hcmuni.fpt.edu.vn/Data/Sites/1/media/2020-kim-vi/seo/campus/1-truong-dai-hoc-fpt-tphcm/truong-dai-hoc-fpt-tp-hcm-(1).jpg'
+];
 
 class FieldDetail extends StatelessWidget{
   Field field;
@@ -26,7 +31,7 @@ class FieldDetail extends StatelessWidget{
                   shadowColor: Colors.white,
                   pinned: true,
                   leading: IconButton(
-                    icon: Icon(Icons.arrow_back_ios,color: Colors.black),
+                    icon: Icon(Icons.arrow_back_ios,color: Colors.white),
                     onPressed: (){
                       Navigator.of(context).pop();
                     },
@@ -35,7 +40,19 @@ class FieldDetail extends StatelessWidget{
                   centerTitle: true,
                   expandedHeight: size.height * 0.3,
                   flexibleSpace: FlexibleSpaceBar(
-                    background:  Image.network('https://daihoc.fpt.edu.vn/wp-content/uploads/2020/05/89354889_2726704134050019_4494620933813698560_o.jpg',fit: BoxFit.cover,width:double.maxFinite),
+                    background:  CarouselSlider.builder(
+                      options: CarouselOptions(
+                        initialPage: 0,
+                        scrollDirection: Axis.horizontal,
+                        autoPlay: true,
+                        height: size.height * 0.3,
+                        viewportFraction: 1.0,
+                        autoPlayInterval: Duration(seconds:5),
+                      ),
+                      itemCount: imageList.length,
+                      itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
+                          Image.network(imageList[itemIndex],fit: BoxFit.cover,width: size.height),
+                    )
                   ),
                   bottom: PreferredSize(
                     child: Container(

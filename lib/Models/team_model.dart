@@ -1,6 +1,4 @@
 
-import 'player_model.dart';
-
 class Team {
   final int id;
   final String name;

@@ -2,31 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_event.dart';
-import 'package:football_booking_fbo_mobile/Models/club_model.dart';
-import 'package:football_booking_fbo_mobile/Models/player_model.dart';
-import 'package:football_booking_fbo_mobile/Models/team_model.dart';
-import 'package:football_booking_fbo_mobile/Validator/club_validator.dart';
 import 'package:football_booking_fbo_mobile/Validator/team_validator.dart';
-
 import '../../../../../constants.dart';
 
-class CreateTeamPage extends StatefulWidget{
-  Club club;
-  CreateTeamPage({required this.club});
 
-  @override
-  State<CreateTeamPage> createState() => _CreateTeamPageState();
-}
-
-class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidation{
+class CreateTeamPage extends StatelessWidget with InputTeamValidation{
 
   final formGlobalKey = GlobalKey<FormState>();
 
-  @override
-  void dispose() {
-    teamNameC.dispose();
-    super.dispose();
-  }
 
   final teamNameC = TextEditingController();
 
@@ -35,17 +18,17 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
     Size size = getSize(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tạo đội hình',style: TextLine1(true)),
+        title: Text('Tạo đội hình',style: WhiteTitleText()),
         centerTitle: true,
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.green,
         leading: IconButton(
           onPressed: (){
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios,color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios,color: Colors.white),
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -88,7 +71,28 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                         },
                       ),
                     ),
-                    SizedBox(height: 10.0,),
+                    SizedBox(height: size.height * 0.1,),
+
+                    Container(
+                      width: size.width * 0.9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.green,
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          if(formGlobalKey.currentState!.validate()) {
+                            String teamName = teamNameC.text;
+                            BlocProvider.of<TeamBloc>(context).add(CreateTeam(teamName: teamName));
+                            Navigator.pop(context,'Đội hình của bạn đã được tạo');
+
+                          }
+                        },
+                        icon: Icon(Icons.add,color:Colors.white),
+                        label: Text('Tạo đội hình',style: MyButtonText()),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
@@ -97,24 +101,7 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
 
         ),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.green,
-        ),
-        child: TextButton.icon(
-          onPressed: () {
-            if(formGlobalKey.currentState!.validate()) {
-              String teamName = teamNameC.text;
-              BlocProvider.of<TeamBloc>(context).add(
-                  CreateTeam(clubId: widget.club.id, teamName: teamName));
-              Navigator.pop(context);
-            }
-          },
-          icon: Icon(Icons.add,color:Colors.white),
-          label: Text('Tạo đội hình',style: MyButtonText()),
-        ),
-      ),
+
     );
   }
 

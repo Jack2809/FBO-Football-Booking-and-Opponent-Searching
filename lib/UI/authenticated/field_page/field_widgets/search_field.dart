@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -52,7 +53,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black
+          color: Colors.white
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
@@ -63,9 +64,13 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.green,
         title: Container(
           height: size.height * 0.05,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           child: Center(
             child: TextField(
               controller: searchContentC,
@@ -87,12 +92,12 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                 });
                 BlocProvider.of<FieldBloc>(context).add(SearchFields(searchContent: searchContentC.text, chosenDate: chosenDaySearch, duration: durationSearch, fieldTypeId: fieldTypeIdSearch));
               },
-              icon: Icon(Icons.search,color: Colors.black,))
+              icon: Icon(Icons.search,color: Colors.white,))
         ],
       ),
       body: Container(
         color: Colors.grey.withOpacity(0.02),
-        padding: MyPaddingAll(),
+        padding: MyPaddingAll10(),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -174,7 +179,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                                     }, currentTime: DateTime.now(), locale: LocaleType.vi);
                               },
                               child: Text(
-                                chosenDaySearch,
+                                dateFormat(chosenDaySearch),
                                 style: TextStyle(color: Colors.black),
                               )),
                         ),
@@ -182,6 +187,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                     ),
                   ],
                 ),
+                SizedBox(height: 10.0,),
                 BlocBuilder<FieldBloc,FieldState>(
                     builder:(context,state){
                       if(state is LoadingFields){

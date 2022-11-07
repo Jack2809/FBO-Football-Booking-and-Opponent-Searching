@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_bloc/player_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_bloc/player_event.dart';
-import 'package:football_booking_fbo_mobile/Models/club_model.dart';
+import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_event.dart';
 import 'package:football_booking_fbo_mobile/Models/player_model.dart';
+import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 import 'package:football_booking_fbo_mobile/Validator/player_validator.dart';
 
 import '../../../../../constants.dart';
 
 class CreatePlayerPage extends StatefulWidget{
-  Club club;
-  CreatePlayerPage({required this.club});
+  Team team;
+  CreatePlayerPage({required this.team});
 
   @override
   State<CreatePlayerPage> createState() => _CreatePlayerPageState();
@@ -44,17 +46,17 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
     Size size = getSize(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tạo Cầu Thủ',style: TextLine1(true)),
+        title: Text('Tạo Cầu Thủ',style: WhiteTitleText()),
         centerTitle: true,
         elevation: 0.0,
         bottomOpacity: 0.0,
         shadowColor: Colors.grey.withOpacity(0.02),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.green,
         leading: IconButton(
           onPressed: (){
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios,color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios,color: Colors.white),
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -161,6 +163,45 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                         return "Số Tuổi không được để trống và số âm !";
                       },
                     ),
+                    SizedBox(height: size.height * 0.1,),
+
+                    Container(
+                      width: size.width * 0.9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.green,
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          if(formGlobalKey.currentState!.validate()) {
+                            if(formGlobalKey.currentState!.validate()) {
+                              log('Processing!!!');
+                              var name = nameC.text;
+                              var phone = phoneC.text;
+                              var email = emailC.text;
+                              var jerseyNo = jerseyNoC.text;
+                              var age = ageC.text;
+                              var newPlayer = PlayerCreationModel(
+                                  name: name,
+                                  phone: phone,
+                                  jerseyNo: int.parse(jerseyNo),
+                                  email: email,
+                                  age: int.parse(age));
+                              BlocProvider.of<PlayerTeamBloc>(context).add(AddTeamPlayer(teamId: widget.team.id, newPlayer: newPlayer));
+                              nameC.text = "";
+                              phoneC.text = "";
+                              emailC.text = "";
+                              jerseyNoC.text = "";
+                              ageC.text = "";
+                              Navigator.of(context).pop('Cầu Thủ đã được tạo ra');
+                            }
+
+                          }
+                        },
+                        icon: Icon(Icons.add,color:Colors.white),
+                        label: Text('Tạo cầu thủ',style: MyButtonText()),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -169,42 +210,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
 
         ),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.green,
-        ),
-        child: TextButton.icon(
-          onPressed: () {
-            if(formGlobalKey.currentState!.validate()) {
-              if(formGlobalKey.currentState!.validate()) {
-                log('Processing!!!');
-                var name = nameC.text;
-                var phone = phoneC.text;
-                var email = emailC.text;
-                var jerseyNo = jerseyNoC.text;
-                var age = ageC.text;
-                var newPlayer = PlayerCreationModel(
-                    name: name,
-                    phone: phone,
-                    jerseyNo: int.parse(jerseyNo),
-                    email: email,
-                    age: int.parse(age));
-                BlocProvider.of<PlayerClubBloc>(context).add(CreatePlayer(clubId: widget.club.id, createdPlayer: newPlayer));
-                nameC.text = "";
-                phoneC.text = "";
-                emailC.text = "";
-                jerseyNoC.text = "";
-                ageC.text = "";
-                Navigator.of(context).pop();
-              }
 
-            }
-          },
-          icon: Icon(Icons.add,color:Colors.white),
-          label: Text('Tạo cầu thủ',style: MyButtonText()),
-        ),
-      ),
     );
   }
 
