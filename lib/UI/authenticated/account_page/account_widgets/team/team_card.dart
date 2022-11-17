@@ -29,7 +29,7 @@ class TeamCard extends StatelessWidget {
             child: CircleAvatar(
 
               backgroundColor: Colors.white,
-              child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/640px-FPT_logo_2010.svg.png',fit: BoxFit.fill),
+              child: Image.network(team.imageUrl,fit: BoxFit.fill),
               radius: size.height * 0.07,
             ),
           ),
@@ -44,7 +44,9 @@ class TeamCard extends StatelessWidget {
 
                   Container(width: size.width * 0.8 ,child: Text('Số thành viên: ' ,)),
 
-                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.name,)),
+                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.description,)),
+
+                  Container(width: size.width * 0.8,child: Text('Điểm đội: '+ team.teamScore.toString(),)),
 
 
                 ],

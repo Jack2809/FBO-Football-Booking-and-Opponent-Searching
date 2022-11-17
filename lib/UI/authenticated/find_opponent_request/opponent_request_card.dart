@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
@@ -8,8 +6,8 @@ import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recom
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_event.dart';
+import 'package:football_booking_fbo_mobile/Models/booked_facility_post_model.dart';
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
-import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_detail.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 
 
@@ -179,12 +177,12 @@ class OpponentRequestCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Text('Ngày đá',style: TextLine1(true)),
+                Text(dateFormat(requestItem.bookingDate),style:HeadLine1()),
                 Text('Thời lượng',style: TextLine1(true)),
                 Text(requestItem.duration.toString()+" phút",style:HeadLine1()),
                 Text('Thời gian rảnh',style: TextLine1(true)),
                 Text(timeFormat(requestItem.startFreeTime) +"-"+timeFormat(requestItem.endFreeTime),style:HeadLine1()),
-                Text('Ngày đá',style: TextLine1(true)),
-                Text(dateFormat(requestItem.bookingDate),style:HeadLine1()),
 
 
 
@@ -299,6 +297,10 @@ class _RecommendedRequestCardState extends State<RecommendedRequestCard> {
                       setState(() {
                         widget.opponentRequestItem.status = 1 ;
                       });
+                      log("home ticket: "+widget.myRequest.id.toString());
+                      log("guest ticket: "+widget.opponentRequestItem.id.toString());
+                      log("homeTeamId: "+widget.myRequest.teamId.toString());
+
                       BlocProvider.of<RecommendedRequestBloc>(context).add(SendChallengeRequest(myRequestId:widget.myRequest.id, opponentRequestId: widget.opponentRequestItem.id, myTeamId: widget.myRequest.teamId));
                     },
                     icon: Icon(RpgAwesome.crossed_swords,color: Colors.white),
@@ -328,14 +330,18 @@ class _RecommendedRequestCardState extends State<RecommendedRequestCard> {
 class WaitingRequestCard extends StatefulWidget {
   WaitingRequest requestItem;
   OpponentRequestDetailModel myRequest;
+  final VoidCallback callBack;
 
-  WaitingRequestCard({required this.requestItem,required this.myRequest});
+  WaitingRequestCard({required this.requestItem,required this.myRequest,required this.callBack});
 
   @override
   State<WaitingRequestCard> createState() => _WaitingRequestCardState();
 }
 
 class _WaitingRequestCardState extends State<WaitingRequestCard> {
+
+  bool _isClicked = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = getSize(context);
@@ -414,15 +420,19 @@ class _WaitingRequestCardState extends State<WaitingRequestCard> {
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: TextButton.icon(
+                child: !_isClicked?TextButton.icon(
                     onPressed: (){
-                      log("my request id:"+widget.myRequest.id.toString());
-                      log("opponent request id:"+widget.requestItem.id.toString());
-                      log("opponent team id :"+widget.requestItem.teamId.toString());
+                      log("guést ticket id:"+widget.myRequest.id.toString());
+                      log("homeTicket id:"+widget.requestItem.id.toString());
+                      log("home team id :"+widget.requestItem.teamId.toString());
                       BlocProvider.of<WaitingRequestBloc>(context).add(AcceptWaitingRequestChallenge(myRequestId: widget.myRequest.id, opponentRequestId: widget.requestItem.id, opponentTeamId: widget.requestItem.teamId));
+                      setState(() {
+                        _isClicked = true;
+                      });
+                      Future.delayed(Duration(seconds:5),() => widget.callBack());
                     },
                     icon: Icon(RpgAwesome.crossed_swords,color: Colors.white),
-                    label: Text('Chấp nhận',style: MyButtonText(),)),
+                    label: Text('Chấp nhận',style: MyButtonText(),)):Center(child: Text('Vui lòng đợi',style: MyButtonText(),),),
               ),
             ),
 
@@ -510,6 +520,45 @@ class MatchedPostCard extends StatelessWidget {
             ),
 
 
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+class BookedFacilityByPostCard extends StatelessWidget {
+  BookedFacilityByPost bookedFacilityByPost;
+
+  BookedFacilityByPostCard({required this.bookedFacilityByPost});
+  @override
+  Widget build(BuildContext context) {
+    Size size = getSize(context);
+    return Container(
+      height: size.height * 0.20,
+      width: size.width * 0.9,
+      padding: MyPaddingAll10(),
+      decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: const Offset(
+                0.0,
+                2.0,
+              ),
+              blurRadius: 5.0,
+              spreadRadius: 1.0,
+            ),
+          ]
+      ),
+      child: Container(
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(bookedFacilityByPost.facilityName),
           ],
         ),
       ),

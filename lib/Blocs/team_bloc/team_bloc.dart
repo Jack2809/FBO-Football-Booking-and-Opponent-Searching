@@ -17,7 +17,7 @@ class TeamBloc extends Bloc<TeamEvent,TeamState>{
 
     on<CreateTeam> ((event,emit) async{
       emit(LoadingTeams());
-      var createdTeam = await createTeam(event.teamName);
+      var createdTeam = await createTeam(event.teamName,event.description,event.imageUrl);
       var fetchedTeamListAfterCreation = await fetchTeams();
       emit(LoadedTeams(teamList: fetchedTeamListAfterCreation));
     });

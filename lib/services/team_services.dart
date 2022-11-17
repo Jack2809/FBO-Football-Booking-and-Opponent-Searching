@@ -28,7 +28,7 @@ Future<List<Team>> fetchTeams()async{
   return parseTeams(map['teamList']);
 }
 
-Future<String> createTeam (String teamName) async {
+Future<String> createTeam (String teamName,String description,String imageUrl) async {
   String accessKey = UserAccessKey.getUserAccessKey() ?? '';
   var response = await http.post(
     Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams'),
@@ -37,7 +37,9 @@ Future<String> createTeam (String teamName) async {
         'Authorization': 'Bearer '+ accessKey,
       },
       body : jsonEncode(<String,String>{
-        'teamName' : teamName
+        "description": description,
+        "imageUrl": imageUrl,
+        "teamName": teamName,
       })
   );
   return response.body;

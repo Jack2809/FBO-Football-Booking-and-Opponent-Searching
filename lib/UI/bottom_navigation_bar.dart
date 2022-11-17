@@ -7,6 +7,7 @@ import 'package:football_booking_fbo_mobile/Models/user_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_page.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/field_page/field_page.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/opponent_request_page.dart';
+import 'package:football_booking_fbo_mobile/UI/authenticated/match_history/match_history_page.dart';
 import 'package:football_booking_fbo_mobile/providers/google_login.dart';
 import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
 import 'package:football_booking_fbo_mobile/services/user_services.dart';
@@ -57,6 +58,7 @@ class _MyPageControllerPageState extends State<MyPageControllerPage> {
          children: [
            FieldPage(),
            OpponentRequestPage(),
+           MatchHistoryPage(),
            AccountPage(),
          ],
       ),
@@ -78,7 +80,11 @@ class _MyPageControllerPageState extends State<MyPageControllerPage> {
               Icons.person_search
             ),
           ),
-
+          CustomNavigationBarItem(
+            icon: Icon(
+              Icons.history,
+            ),
+          ),
           CustomNavigationBarItem(
             icon: Icon(
               Icons.person

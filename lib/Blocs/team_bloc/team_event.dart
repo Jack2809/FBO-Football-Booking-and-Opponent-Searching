@@ -24,8 +24,10 @@ class DeleteTeam extends TeamEvent{
 
 class CreateTeam extends TeamEvent{
   final String teamName;
-  CreateTeam({required this.teamName});
+  final String description;
+  final String imageUrl;
+  CreateTeam({required this.teamName,required this.description,required this.imageUrl});
 
   @override
-  List<Object> get props => [teamName];
+  List<Object> get props => [teamName,description,imageUrl];
 }

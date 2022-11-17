@@ -6,4 +6,12 @@ mixin InputTeamValidation{
     }
     return true;
   }
+
+  bool isValidDescription (String? description){
+    if(description!.isEmpty || description!.length < 10){
+      return false;
+    }
+    return true;
+  }
+
 }

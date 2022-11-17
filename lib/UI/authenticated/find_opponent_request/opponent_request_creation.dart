@@ -525,6 +525,9 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
               ),
               child: const Text('OK'),
               onPressed: () {
+                districtStrList.sort((a,b){
+                  return a.compareTo(b);
+                });
                 setState(() {
                   _selectedDistrictIds = districtIdList;
                   _selectedDistrictsStr = districtStrList;

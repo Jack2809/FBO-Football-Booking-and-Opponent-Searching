@@ -53,35 +53,40 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
         color: Colors.grey.withOpacity(0.02),
         padding: MyPaddingAll(),
         child: SafeArea(
-          child: BlocBuilder<OpponentRequestBloc,OpponentRequestState>(
-              builder:(context,state){
-                if(state is LoadingOpponentRequests){
-                  return Center(child: CircularProgressIndicator(),);
-                }
-                else if(state is LoadedOpponentRequests){
-                  if(state.requestList.isEmpty){
-                    return Center(child: Text('Không có yêu cầu nào'),);
-                  }else{
-                    return ListView.separated(
-                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10.0),
-                        padding: MyPaddingAll(),
-                        // shrinkWrap: true,
-                        itemCount: state.requestList.length,
-                        itemBuilder: ((context, index) {
-                          return GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(request: state.requestList[index],)));
-                            },
-                            child: OpponentRequestCard(requestItem: state.requestList[index]),
-                          );
-                        }
-                        ));
+          child: RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<OpponentRequestBloc>(context).add(FetchOpponentRequests());
+            },
+            child: BlocBuilder<OpponentRequestBloc,OpponentRequestState>(
+                builder:(context,state){
+                  if(state is LoadingOpponentRequests){
+                    return Center(child: CircularProgressIndicator(),);
+                  }
+                  else if(state is LoadedOpponentRequests){
+                    if(state.requestList.isEmpty){
+                      return Center(child: Text('Không có yêu cầu nào'),);
+                    }else{
+                      return ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10.0),
+                          padding: MyPaddingAll(),
+                          // shrinkWrap: true,
+                          itemCount: state.requestList.length,
+                          itemBuilder: ((context, index) {
+                            return GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(requestId: state.requestList[index].id,requestStatus: state.requestList[index].status,)));
+                              },
+                              child: OpponentRequestCard(requestItem: state.requestList[index]),
+                            );
+                          }
+                          ));
+                    }
+                  }
+                  else {
+                    return Center(child: Text('Something wrong!!'),);
                   }
                 }
-                else {
-                  return Center(child: Text('Something wrong!!'),);
-                }
-              }
+            ),
           ),
         ),
       ),

@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/a_matched_post_bloc/matched_post_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/booked_facility_post_bloc/booked_facility_post_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/deposit_fee_bloc/deposit_fee_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/district_bloc/district_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/match_history_bloc/match_history_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/opponent_request_bloc/opponent_request_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_bloc/player_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_bloc.dart';
@@ -13,6 +16,7 @@ import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_post_bloc/time_slot_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/user_bloc/user_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/zalopay_bloc/zalopay_bloc.dart';
 import 'package:football_booking_fbo_mobile/UI/bottom_navigation_bar.dart';
 import 'package:football_booking_fbo_mobile/UI/unauthenticated/login_page/login_page.dart';
 import 'package:football_booking_fbo_mobile/providers/google_login.dart';
@@ -52,6 +56,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => MatchedPostBloc()),
         BlocProvider(create: (context) => FacilityWithMatchedPostBloc()),
         BlocProvider(create: (context) => TimeSlotBloc()),
+        BlocProvider(create: (context) => ZaloPayBloc()),
+        BlocProvider(create: (context) => DepositFeeBloc()),
+        BlocProvider(create: (context) => BookedFacilityByPostBloc()),
+        BlocProvider(create: (context) => MatchHistoryBloc()),
       ],
       child: MaterialApp(
         home: MainPage(),

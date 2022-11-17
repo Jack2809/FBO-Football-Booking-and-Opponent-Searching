@@ -11,7 +11,7 @@ List<OpponentRequest> parseOpponentRequest(List responseBody){
 Future<List<OpponentRequest>> fetchOpponentRequests () async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.get(
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=20&sortBy=id&sortDir=asc'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,
@@ -169,7 +169,7 @@ Future<MatchedRequest> getMatchedRequest (int requestId) async{
         'Authorization': 'Bearer '+ accessKey,
       }
   );
-
+  log("match post status:"+response.statusCode.toString());
   return parseMatchedRequest(response.body);
 
 }

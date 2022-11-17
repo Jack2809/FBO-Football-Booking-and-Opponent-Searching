@@ -4,7 +4,7 @@ import 'package:football_booking_fbo_mobile/Models/player_model.dart';
 import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
 import 'package:http/http.dart' as http;
 
-List<Player> parseClubs(List responseBody){
+List<Player> parsePlayersInClub(List responseBody){
   return responseBody.map<Player>((json) =>Player.fromJson(json)).toList();
 }
 
@@ -18,7 +18,7 @@ Future<List<Player>> fetchPlayersInClub(int clubId) async{
       }
   );
   Map<String,dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
-  return parseClubs(map['playerList']);
+  return parsePlayersInClub(map['playerList']);
 }
 
 Future<String> createPlayerInClub(PlayerCreationModel player,int clubId) async{

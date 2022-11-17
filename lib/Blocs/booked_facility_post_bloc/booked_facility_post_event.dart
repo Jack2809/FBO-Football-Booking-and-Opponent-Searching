@@ -9,14 +9,25 @@ abstract class BookedFacilityPostEvent extends Equatable{
 
 class BookFacilityByPost extends BookedFacilityPostEvent{
   final int postId;
+  final double depositMoney;
   final int facilityId;
   final double duration;
   final int fieldTypeId;
   final String startDateTime;
 
-  BookFacilityByPost({required this.postId,required this.facilityId,required this.fieldTypeId,required this.duration,required this.startDateTime});
+  BookFacilityByPost({required this.postId,required this.depositMoney,required this.facilityId,required this.fieldTypeId,required this.duration,required this.startDateTime});
 
 
   @override
-  List<Object> get props => [postId,facilityId,duration,fieldTypeId,startDateTime];
+  List<Object> get props => [postId,depositMoney,facilityId,duration,fieldTypeId,startDateTime];
+}
+
+class GetBookedFacilityByPost extends BookedFacilityPostEvent{
+  final int postId;
+
+  GetBookedFacilityByPost({required this.postId});
+
+
+  @override
+  List<Object> get props => [postId];
 }

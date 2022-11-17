@@ -57,7 +57,7 @@ class OpponentRequestDetailModel{
   final String startFreeTime;
   final String endFreeTime;
   final int duration;
-  final int status;
+  int status;
   final String createdDate;
   List<District> districtList;
 
@@ -168,13 +168,15 @@ class MatchedRequest {
   final String startFreeTime;
   final String endFreeTime;
   final String districts;
+  final bool isBooker;
 
   MatchedRequest({
     required this.id,
     required this.teamName,
     required this.startFreeTime,
     required this.endFreeTime,
-    required this.districts
+    required this.districts,
+    required this.isBooker
   });
 
   factory MatchedRequest.fromJson(Map<String,dynamic> json){
@@ -183,7 +185,8 @@ class MatchedRequest {
         teamName: json['teamName'] as String,
         startFreeTime: json['startFreeTime'] as String,
         endFreeTime: json['endFreeTime'] as String,
-        districts: json['districtNames'] as String
+        districts: json['districtNames'] as String,
+        isBooker: json['booker'] as bool
     );
   }
 
