@@ -2,20 +2,28 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+<<<<<<< HEAD
 import 'package:football_booking_fbo_mobile/Blocs/deposit_fee_bloc/deposit_fee_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/deposit_fee_bloc/deposit_fee_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/deposit_fee_bloc/deposit_fee_state.dart';
+=======
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_state.dart';
 import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_post_bloc/time_slot_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_post_bloc/time_slot_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_post_bloc/time_slot_state.dart';
+<<<<<<< HEAD
 import 'package:football_booking_fbo_mobile/Blocs/zalopay_bloc/zalopay_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/zalopay_bloc/zalopay_event.dart';
 import 'package:football_booking_fbo_mobile/Models/field_model.dart';
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/book_facility_by_zalo_pay.dart';
+=======
+import 'package:football_booking_fbo_mobile/Models/field_model.dart';
+import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:group_button/group_button.dart';
 import 'package:interval_time_picker/interval_time_picker.dart';
@@ -59,8 +67,12 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
 
   bool _isFirstLoadTimeSlot = true;
 
+<<<<<<< HEAD
   bool? _isChosenFacility ;
 
+=======
+  bool _isChosenFacility = false;
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 
   void _selectTimeStart(TimeOfDay timeStart,TimeOfDay timeEnd,int duration) async {
     final TimeOfDay? newTime = await showIntervalTimePicker(
@@ -96,6 +108,7 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1])).format(context);
   }
 
+<<<<<<< HEAD
   void _showSuccessfulPayment() {
     showDialog(
         context: context,
@@ -117,6 +130,8 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
         });
   }
 
+=======
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +206,14 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                                   )),
                             )),
                       ),
+<<<<<<< HEAD
                       _isChosenFacility == false?Center(child: Text('Vui lòng chọn sân',style: TextStyle(color: Colors.red),)):SizedBox(),
                       SizedBox(height: 20.0,),
                       _isChosenFacility == true?BlocBuilder<TimeSlotBloc,TimeSlotState>(
+=======
+                      SizedBox(height: 20.0,),
+                      _isChosenFacility?BlocBuilder<TimeSlotBloc,TimeSlotState>(
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
                           builder:(context,state){
                             if(state is LoadingTimeSlot){
                               return _isFirstLoadTimeSlot ? SizedBox():Center(child: CircularProgressIndicator(),);
@@ -276,7 +296,11 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                               )),
                             )),
                       ),
+<<<<<<< HEAD
                       _isValidTimeStart? SizedBox() : (timeFormat(state.facilityData.matchedTimeStart)==timeFormat(caculateEndTime(state.facilityData.matchedTimeEnd,widget.myRequest.duration)))?Center(child: Text('Thời gian đặt phải là '+timeFormat(state.facilityData.matchedTimeStart),style: TextStyle(color: Colors.red)),):Center(child: Text('Thời gian đá phải trong khoảng ' +timeFormat(state.facilityData.matchedTimeStart,)+'-'+timeFormat(caculateEndTime(state.facilityData.matchedTimeEnd,widget.myRequest.duration)),style:TextStyle(color: Colors.red),)),
+=======
+                      _isValidTimeStart? SizedBox() : Center(child: Text('Thời gian đá phải trong khoảng ' +timeFormat(state.facilityData.matchedTimeStart)+'-'+timeFormat(caculateEndTime(state.facilityData.matchedTimeEnd,widget.myRequest.duration)),style:TextStyle(color: Colors.red),)),
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
                       SizedBox(height: 20.0,),
                       Container(
                         width: size.width,
@@ -287,6 +311,7 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                         child: TextButton.icon(
                           icon:Icon(Icons.calendar_today,color: Colors.white,),
                           onPressed: (){
+<<<<<<< HEAD
                             if(_facility == null || _timeStart == null){
                               if(_facility == null){
                                 setState(() {
@@ -313,6 +338,18 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                               log("startDateTime:" + startTimeStr);
                               Navigator.push(context, MaterialPageRoute(builder: (context)=> ZaloPaymentScreen(facilityId: _facility!.id, startTime: startTimeStr, myRequest: widget.myRequest)));
                             }
+=======
+                            DateTime temp = DateTime.parse(widget.myRequest.bookingDate);
+                            DateTime startTime = DateTime(temp.year,temp.month,temp.day,_timeStart!.hour,_timeStart!.minute);
+                            final f = new DateFormat('yyyy-MM-dd hh:mm:ss');
+                            String startTimeStr = f.format(startTime);
+                            log('My request :'+widget.myRequest.id.toString());
+                            log("Facility Id: "+widget.myRequest.id.toString());
+                            log('duration :'+widget.myRequest.duration.toString());
+                            log('FieldTypeId :'+widget.myRequest.fieldTypeId.toString());
+                            log("startDateTime:"+startTimeStr);
+
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
                           },
                           label: Text('Xác nhận',style: MyButtonText()),
                         ),
@@ -414,5 +451,9 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
       },
     );
   }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55

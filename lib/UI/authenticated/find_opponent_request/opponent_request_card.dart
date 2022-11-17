@@ -1,4 +1,9 @@
 import 'dart:developer';
+<<<<<<< HEAD
+=======
+
+import 'package:flutter/cupertino.dart';
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
@@ -6,7 +11,10 @@ import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recom
 import 'package:football_booking_fbo_mobile/Blocs/recommended_request_bloc/recommended_request_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/waiting_request_bloc/waiting_request_event.dart';
+<<<<<<< HEAD
 import 'package:football_booking_fbo_mobile/Models/booked_facility_post_model.dart';
+=======
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 
@@ -183,6 +191,8 @@ class OpponentRequestCard extends StatelessWidget {
                 Text(requestItem.duration.toString()+" phút",style:HeadLine1()),
                 Text('Thời gian rảnh',style: TextLine1(true)),
                 Text(timeFormat(requestItem.startFreeTime) +"-"+timeFormat(requestItem.endFreeTime),style:HeadLine1()),
+                Text('Ngày đá',style: TextLine1(true)),
+                Text(dateFormat(requestItem.bookingDate),style:HeadLine1()),
 
 
 
@@ -330,6 +340,7 @@ class _RecommendedRequestCardState extends State<RecommendedRequestCard> {
 class WaitingRequestCard extends StatefulWidget {
   WaitingRequest requestItem;
   OpponentRequestDetailModel myRequest;
+<<<<<<< HEAD
   final VoidCallback callBack;
 
   WaitingRequestCard({required this.requestItem,required this.myRequest,required this.callBack});
@@ -341,7 +352,16 @@ class WaitingRequestCard extends StatefulWidget {
 class _WaitingRequestCardState extends State<WaitingRequestCard> {
 
   bool _isClicked = false;
+=======
 
+  WaitingRequestCard({required this.requestItem,required this.myRequest});
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
+
+  @override
+  State<WaitingRequestCard> createState() => _WaitingRequestCardState();
+}
+
+class _WaitingRequestCardState extends State<WaitingRequestCard> {
   @override
   Widget build(BuildContext context) {
     Size size = getSize(context);
@@ -420,6 +440,7 @@ class _WaitingRequestCardState extends State<WaitingRequestCard> {
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
+<<<<<<< HEAD
                 child: !_isClicked?TextButton.icon(
                     onPressed: (){
                       log("guést ticket id:"+widget.myRequest.id.toString());
@@ -430,6 +451,14 @@ class _WaitingRequestCardState extends State<WaitingRequestCard> {
                         _isClicked = true;
                       });
                       Future.delayed(Duration(seconds:5),() => widget.callBack());
+=======
+                child: TextButton.icon(
+                    onPressed: (){
+                      log("my request id:"+widget.myRequest.id.toString());
+                      log("opponent request id:"+widget.requestItem.id.toString());
+                      log("opponent team id :"+widget.requestItem.teamId.toString());
+                      BlocProvider.of<WaitingRequestBloc>(context).add(AcceptWaitingRequestChallenge(myRequestId: widget.myRequest.id, opponentRequestId: widget.requestItem.id, opponentTeamId: widget.requestItem.teamId));
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
                     },
                     icon: Icon(RpgAwesome.crossed_swords,color: Colors.white),
                     label: Text('Chấp nhận',style: MyButtonText(),)):Center(child: Text('Vui lòng đợi',style: MyButtonText(),),),
@@ -525,6 +554,7 @@ class MatchedPostCard extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 
 }
 
@@ -564,5 +594,7 @@ class BookedFacilityByPostCard extends StatelessWidget {
       ),
     );
   }
+=======
+>>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 
 }
