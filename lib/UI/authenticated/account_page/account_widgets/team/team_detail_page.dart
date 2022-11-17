@@ -7,10 +7,6 @@ import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_e
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_state.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_event.dart';
-<<<<<<< HEAD
-=======
-import 'package:football_booking_fbo_mobile/Models/player_model.dart';
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/player_card.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/player_creation.dart';
@@ -97,11 +93,7 @@ class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
                 Center(
                   child: CircleAvatar(
                     backgroundColor: primaryColor,
-<<<<<<< HEAD
                     backgroundImage: NetworkImage(widget.team.imageUrl),
-=======
-                    child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/640px-FPT_logo_2010.svg.png', fit: BoxFit.fill),
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
                     radius: size.height * 0.1,
                   ),
                 ),
@@ -110,12 +102,7 @@ class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
                   'Mô tả',
                   style: HeadLine1(),
                 ),
-<<<<<<< HEAD
                 Text(widget.team.description, style: TextLine2(),maxLines:5),
-=======
-                Text(widget.team.name, style: TextLine2()),
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
-
                 Text('Danh sách cầu thủ trong Đôi Hình:',style: HeadLine1()),
                 BlocBuilder<PlayerTeamBloc, PlayerTeamState>(
                     builder: (context, state) {

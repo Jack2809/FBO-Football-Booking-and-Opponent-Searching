@@ -11,11 +11,9 @@ List<OpponentRequest> parseOpponentRequest(List responseBody){
 Future<List<OpponentRequest>> fetchOpponentRequests () async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.get(
-<<<<<<< HEAD
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=20&sortBy=id&sortDir=asc'),
-=======
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
+
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=20&sortBy=bookingDate&sortDir=desc'),
+
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,
@@ -40,6 +38,7 @@ Future<OpponentRequestDetailModel> fetchOpponentRequestDetail (int requestId) as
         'Authorization': 'Bearer '+ accessKey,
       }
   );
+
 
   return parseOpponentRequestDetail(response.body);
 
@@ -77,7 +76,7 @@ Future<String> createOpponentRequest (List<int> districtIdList,
         'isRivalry': isRivalry
       })
   );
-  log("status:" +response.statusCode.toString());
+  log(response.body);
   return response.body;
 }
 
@@ -173,11 +172,7 @@ Future<MatchedRequest> getMatchedRequest (int requestId) async{
         'Authorization': 'Bearer '+ accessKey,
       }
   );
-<<<<<<< HEAD
-  log("match post status:"+response.statusCode.toString());
-=======
 
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
   return parseMatchedRequest(response.body);
 
 }

@@ -175,6 +175,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                 children: [
                   Text('Từ ',style: TextLine1(true)),
                   GestureDetector(
+
                       onTap: (){
                         _selectFreeTimeStart();
                       },
@@ -428,21 +429,21 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                         validDistrictStr = isSelectedDistrict(_selectedDistrictIds);
                       });
                       String bookingDate = _selectedDate.toString();
-                      String freetimeStart = _freeTimeStart.format(context)+":00";
-                      String freetimeEnd = _freeTimeEnd.format(context)+":00";
+                      String freetimeStart = convertTime(_freeTimeStart);
+                      String freetimeEnd = convertTime(_freeTimeEnd);
                       int duration = _duration;
                       int teamId = _teamId!;
                       int fieldTypeId = _is5vs5 ? 1 : 2;
                       List<int> districtIdList = _selectedDistrictIds;
                       int isRivalry = _isRivalry ? 1 : 0 ;
-                      // log("booking date: " + bookingDate);
-                      // log("freetime start: "+freetimeStart);
-                      // log("freetime end: "+freetimeEnd);
-                      // log("duration: "+duration.toString());
-                      // log("teamid: "+teamId.toString());
-                      // log("fieldtype: "+fieldTypeId.toString());
-                      // log("district: "+districtIdList.join(","));
-                      // log('isRivalry'+ isRivalry.toString());
+                      log("booking date: " + bookingDate);
+                      log("freetime start: "+freetimeStart);
+                      log("freetime end: "+freetimeEnd);
+                      log("duration: "+duration.toString());
+                      log("teamid: "+teamId.toString());
+                      log("fieldtype: "+fieldTypeId.toString());
+                      log("district: "+districtIdList.join(","));
+                      log('isRivalry'+ isRivalry.toString());
                       BlocProvider.of<OpponentRequestBloc>(context).add(
                           CreateOpponentRequest(districtIdList: districtIdList, bookingDate: bookingDate, duration: duration, freetimeStart: freetimeStart, freetimeEnd: freetimeEnd, fieldTypeId: fieldTypeId, teamId: teamId,isRivalry: isRivalry));
                       Navigator.pop(context,'Yêu cầu đã được tạo');

@@ -3,15 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_event.dart';
 import 'package:football_booking_fbo_mobile/Validator/team_validator.dart';
+import 'package:football_booking_fbo_mobile/services/image_services.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../../constants.dart';
 
 
-class CreateTeamPage extends StatelessWidget with InputTeamValidation{
+class CreateTeamPage extends StatefulWidget{
 
+  @override
+  State<CreateTeamPage> createState() => _CreateTeamPageState();
+}
+
+class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidation{
   final formGlobalKey = GlobalKey<FormState>();
 
-
   final teamNameC = TextEditingController();
+
+  final descriptionC = TextEditingController();
+
+  String _imageLink = '';
+
+  Future pickImage() async{
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(image == null) return;
+    final res = await uploadImage(image.path);
+    setState(() {
+      _imageLink = res ;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +66,23 @@ class CreateTeamPage extends StatelessWidget with InputTeamValidation{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(_imageLink),
+                      radius: size.height * 0.05,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt,color: Colors.green),
+                              onPressed: (){
+                                pickImage();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 10.0,),
                     Container(
                       decoration: BoxDecoration(
@@ -74,6 +110,18 @@ class CreateTeamPage extends StatelessWidget with InputTeamValidation{
                     SizedBox(height: size.height * 0.1,),
 
                     Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: TextFormField(
+                        controller: descriptionC,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 5,
+                      )
+                    ),
+
+                    Container(
                       width: size.width * 0.9,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -83,7 +131,8 @@ class CreateTeamPage extends StatelessWidget with InputTeamValidation{
                         onPressed: () {
                           if(formGlobalKey.currentState!.validate()) {
                             String teamName = teamNameC.text;
-                            BlocProvider.of<TeamBloc>(context).add(CreateTeam(teamName: teamName));
+                            String description = descriptionC.text;
+                            BlocProvider.of<TeamBloc>(context).add(CreateTeam(teamName: teamName,imageUrl: _imageLink,description:  description));
                             Navigator.pop(context,'Đội hình của bạn đã được tạo');
 
                           }
@@ -104,6 +153,5 @@ class CreateTeamPage extends StatelessWidget with InputTeamValidation{
 
     );
   }
-
 }
 

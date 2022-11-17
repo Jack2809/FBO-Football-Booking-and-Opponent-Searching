@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 
 Size getSize(BuildContext context){
@@ -16,6 +16,12 @@ String dateFormat(String date){
   var split = date.split('-');
   String finalDate = split[2]+"-"+split[1]+"-"+split[0];
   return finalDate;
+}
+
+String convertTime(TimeOfDay time){
+  DateTime tempDate = DateTime.now();
+  DateTime date = DateTime(tempDate.year,tempDate.month,tempDate.day,time.hour,time.minute);
+  return DateFormat('HH:mm:ss').format(date);
 }
 
 

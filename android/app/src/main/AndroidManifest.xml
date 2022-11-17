@@ -25,11 +25,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="demozpdk"
-                    android:host="app" />
 
             </intent-filter>
 
@@ -50,21 +45,14 @@
 
        <meta-data
            android:name="com.vng.zalo.sdk.APP_ID"
-<<<<<<< HEAD
            android:value="2554" />
-=======
-           android:value="2553" />
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
        <meta-data
            android:name="com.vng.zalo.sdk.URI_SCHEME"
            android:value="demozpdk://app" />
        <meta-data
            android:name="com.vng.zalo.sdk.ENVIRONMENT"
-<<<<<<< HEAD
+
            android:value="SANDBOX" />
-=======
-           android:value="SANDBOX" /> // OR value="PRODUCTION"
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
 
     </application>
 </manifest>

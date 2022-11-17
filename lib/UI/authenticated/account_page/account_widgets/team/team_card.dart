@@ -44,13 +44,10 @@ class TeamCard extends StatelessWidget {
 
                   Container(width: size.width * 0.8 ,child: Text('Số thành viên: ' ,)),
 
-<<<<<<< HEAD:lib/UI/authenticated/account_page/account_widgets/team/team_card.dart
                   Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.description,)),
 
                   Container(width: size.width * 0.8,child: Text('Điểm đội: '+ team.teamScore.toString(),)),
-=======
-                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.name,)),
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55:lib/UI/authenticated/account_page/account_widgets/club/club_card.dart
+
 
 
                 ],

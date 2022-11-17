@@ -168,22 +168,19 @@ class MatchedRequest {
   final String startFreeTime;
   final String endFreeTime;
   final String districts;
-<<<<<<< HEAD
+
   final bool isBooker;
-=======
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
+
 
   MatchedRequest({
     required this.id,
     required this.teamName,
     required this.startFreeTime,
     required this.endFreeTime,
-<<<<<<< HEAD
+
     required this.districts,
     required this.isBooker
-=======
-    required this.districts
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
+
   });
 
   factory MatchedRequest.fromJson(Map<String,dynamic> json){
@@ -192,12 +189,9 @@ class MatchedRequest {
         teamName: json['teamName'] as String,
         startFreeTime: json['startFreeTime'] as String,
         endFreeTime: json['endFreeTime'] as String,
-<<<<<<< HEAD
         districts: json['districtNames'] as String,
         isBooker: json['booker'] as bool
-=======
-        districts: json['districtNames'] as String
->>>>>>> f7fbb583d6e9cdbbcbb9f5e0109f4ee8d3a9bc55
+
     );
   }
 
