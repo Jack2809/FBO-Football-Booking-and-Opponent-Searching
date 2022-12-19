@@ -1,8 +1,8 @@
 
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 
 mixin InputOpponentRequestValidation {
 
@@ -14,25 +14,34 @@ mixin InputOpponentRequestValidation {
   }
 
   String? isValidFreeTimeValid (TimeOfDay freeTimeStart,TimeOfDay freeTimeEnd,int duration){
-    var now = DateTime.now();
-    DateTime start = DateTime(now.year,now.month,now.day,freeTimeStart.hour,freeTimeStart.minute);
-    DateTime end = DateTime(now.year,now.month,now.day,freeTimeEnd.hour,freeTimeEnd.minute);
     if (freeTimeStart == TimeOfDay(hour: 0,minute: 0) && freeTimeEnd == TimeOfDay(hour: 0,minute: 0)) {
       return "vui lòng chọn đầy đủ thời gian rảnh";
-    }
-    if(freeTimeStart == TimeOfDay(hour: 0,minute: 0)) return "Chọn bắt đầu giờ rảnh";
-    if (freeTimeEnd == TimeOfDay(hour: 0,minute: 0)) return "Chọn kết thúc giờ rảnh";
-    if(end.isBefore(start)){
-      return 'Thời gian rảnh không hợp lệ';
-    }
-    var freeTimeDurationStr = end.difference(start).toString().split(":");
-    double freeTimeDurationHour = double.parse(freeTimeDurationStr[0]);
-    double freeTimeDurationMinutes = minutesConvert(freeTimeDurationStr[1]);
-    double TotalFreeTimeDuration = freeTimeDurationHour+freeTimeDurationMinutes;
-    log(TotalFreeTimeDuration.toString());
-    double durationInhours = duration/60;
-    if(TotalFreeTimeDuration < durationInhours){
-      return "Thời lượng của thời gian rảnh nhỏ hơn thời lượng trận đấu";
+    }else{
+      var now = DateTime.now();
+      DateTime start;
+      DateTime end;
+      if(freeTimeStart == TimeOfDay(hour: 0,minute: 0)){
+         start = DateTime(now.year,now.month,now.day,0,0);
+      }else{
+        start = DateTime(now.year,now.month,now.day,freeTimeStart.hour,freeTimeStart.minute);
+      }
+      if(freeTimeEnd == TimeOfDay(hour: 0,minute: 0)){
+        end = DateTime(now.year,now.month,now.day,24,0);
+      }else{
+        end = DateTime(now.year,now.month,now.day,freeTimeEnd.hour,freeTimeEnd.minute);
+      }
+      if(end.isBefore(start)){
+        return 'Thời gian rảnh không hợp lệ';
+      }
+      var freeTimeDurationStr = end.difference(start).toString().split(":");
+      double freeTimeDurationHour = double.parse(freeTimeDurationStr[0]);
+      double freeTimeDurationMinutes = minutesConvert(freeTimeDurationStr[1]);
+      double totalFreeTimeDuration = freeTimeDurationHour+freeTimeDurationMinutes;
+      log(totalFreeTimeDuration.toString());
+      double durationInHours = duration / 60;
+      if(totalFreeTimeDuration < durationInHours){
+        return "Thời lượng của thời gian rảnh nhỏ hơn thời lượng trận đấu";
+      }
     }
 
     return "";
@@ -45,9 +54,16 @@ String? isSelectedClub(int? clubId){
     return "";
 }
 
-  String? isSelectedTeam(int? teamId){
-    if(teamId == null){
+  String? isSelectedTeam(Team? team , bool _is5vs5){
+    if(team == null){
       return 'Vui lòng chọn đội hình !!';
+    }
+    if(_is5vs5){
+      if(team.numberOfPlayers < 5 || team.numberOfPlayers > 7)
+        return "số lượng thành viên phải là 5 - 6 cầu thủ";
+    }else{
+      if(team.numberOfPlayers < 7 || team.numberOfPlayers > 9)
+        return "số lượng thành viên phải từ 7 - 9 cầu thủ ";
     }
     return "";
   }

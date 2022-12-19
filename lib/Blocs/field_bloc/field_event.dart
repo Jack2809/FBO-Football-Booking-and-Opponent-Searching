@@ -8,16 +8,14 @@ abstract class FieldEvent extends Equatable{
   List<Object> get props => [];
 }
 
-class SearchFields extends FieldEvent{
-  final String searchContent;
-  final String chosenDate;
-  final double duration;
-  final int fieldTypeId;
+class FetchFields extends FieldEvent{
+  final int districtId;
 
-  SearchFields({required this.searchContent,required this.chosenDate,required this.duration,required this.fieldTypeId});
+  FetchFields({required this.districtId});
 
   @override
-  List<Object> get props => [searchContent,chosenDate,duration,fieldTypeId];
+  List<Object> get props => [districtId];
+
 }
 
 

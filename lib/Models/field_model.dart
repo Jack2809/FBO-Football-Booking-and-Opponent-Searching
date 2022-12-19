@@ -7,8 +7,9 @@ class Field {
   final String address;
   final String description;
   final String image;
+  final String phone;
 
-  Field({required this.id,required this.name,required this.districtName,required this.address,required this.openTime,required this.closeTime,required this.description,required this.image});
+  Field({required this.id,required this.name,required this.districtName,required this.address,required this.openTime,required this.closeTime,required this.description,required this.image,required this.phone});
 
   factory Field.fromJson(Map<String, dynamic> json) {
     return Field(
@@ -20,6 +21,7 @@ class Field {
       openTime:json['openTime'] as String,
       closeTime: json['closeTime'] as String ,
       districtName: json['districtName'] as String,
+      phone: json['phone'] as String,
     );
   }
 }

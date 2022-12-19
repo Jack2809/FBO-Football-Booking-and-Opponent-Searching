@@ -1,4 +1,4 @@
- import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
@@ -7,9 +7,6 @@ import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_state.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/team_card.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/team_creation.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
-
-
-
 import 'team_detail_page.dart';
 
 
@@ -20,6 +17,8 @@ import 'team_detail_page.dart';
  }
 
  class _TeamPageState extends State<TeamPage> {
+
+   int _teamLength = 0;
 
 
    @override
@@ -58,6 +57,7 @@ import 'team_detail_page.dart';
                  return Center(child: CircularProgressIndicator(),);
                }
                else if(state is LoadedTeams){
+                   _teamLength = state.teamList.length;
                  if(state.teamList.isEmpty){
                    return Center(child: Text('Không có đội hình nào'),);
                  }else{
@@ -68,10 +68,11 @@ import 'team_detail_page.dart';
                     itemCount: state.teamList.length,
                     itemBuilder: ((context, index) {
                       return GestureDetector(
-                        onTap: () async{
-                          final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  TeamDetail(team:state.teamList[index],)));
-                          if(!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
+                        onTap: () {
+                          if(state.teamList[index].numberOfPlayers == 0){
+
+                          }
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  TeamDetail(team:state.teamList[index],)));
                         },
                         child: TeamCard(team: state.teamList[index]),
                       );
@@ -91,9 +92,13 @@ import 'team_detail_page.dart';
            color: Colors.green,
          ),
          child: TextButton.icon(
-           onPressed: () async{
-             final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateTeamPage()),);
-             ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
+           onPressed: () {
+             if(_teamLength < 10) {
+               Navigator.push(context,
+                 MaterialPageRoute(builder: (context) => CreateTeamPage()),);
+             } else {
+               announceInformation(context, 'Bạn đã sở hữu tối đa 10 đội');
+             }
            },
            icon: Icon(Icons.add,color: Colors.white,),
            label: Text('Tạo Đội hình',style: MyButtonText()),

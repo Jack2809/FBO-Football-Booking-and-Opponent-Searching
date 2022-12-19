@@ -10,7 +10,8 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json){
     return UserModel(
         id: json['id'] as int,
-        accessToken:json['accessToken'] as String);
+        accessToken:json['accessToken'] as String,
+    );
   }
 
 }
@@ -24,6 +25,7 @@ class UserInfoModel {
   String address;
   String phoneNumber;
   String image;
+  int status;
 
   UserInfoModel({ required this.id,
     required this.username,
@@ -33,6 +35,7 @@ class UserInfoModel {
     required this.address,
     required this.phoneNumber,
     required this.image,
+    required this.status
   });
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
@@ -43,8 +46,9 @@ class UserInfoModel {
       name: json['name'] as String,
       dateOfBirth: json['dateOfBirth'] as String,
       address: json['address'] as String,
-      phoneNumber: json['phoneNumber']  ?? '' ,
+      phoneNumber: json['phoneNumber'] ?? "" ,
       image: json['image'] as String,
+      status: json['status']
     );
   }
 }

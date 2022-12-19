@@ -24,6 +24,16 @@ class DeleteOpponentRequest extends OpponentRequestEvent{
   List<Object> get props => [requestId];
 }
 
+
+class ShowPopUpMessageEvent extends OpponentRequestEvent{
+  final String content;
+
+  ShowPopUpMessageEvent({required this.content});
+
+  @override
+  List<Object> get props => [content];
+}
+
 class CreateOpponentRequest extends OpponentRequestEvent{
   final List<int> districtIdList;
   final String bookingDate;

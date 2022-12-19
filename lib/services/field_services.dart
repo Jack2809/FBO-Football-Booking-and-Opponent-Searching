@@ -7,6 +7,25 @@ import 'package:football_booking_fbo_mobile/Models/field_model.dart';
 import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
 import 'package:intl/intl.dart';
 
+
+Future<List<Field>> fetchFields(int districtId) async {
+  String accessKey = UserAccessKey.getUserAccessKey() ?? '';
+  var response = await http.get(
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/district/' +
+          districtId.toString() +
+          '/facilities?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + accessKey,
+      }
+  );
+  Map map = jsonDecode(utf8.decode(response.bodyBytes));
+
+  return parseFields(map['facilityList']);
+}
+
+
+
 List<Field> parseFields(List responseBody){
   return responseBody.map<Field>((json) =>Field.fromJson(json)).toList();
 }
@@ -23,10 +42,7 @@ Future<List<Field>> searchFields(double duration,int fieldTypeId,String searchNa
     var finalChosenDay = DateTime.parse(chosenDay);
     nowStr = now.format(finalChosenDay);
   }
-  // log(nowStr);
-  // log(duration.toString());
-  // log(fieldTypeId.toString());
-  // log(searchNameOrDistrict);
+
   var response = await http.post(
       Uri.parse('https://football-booking-app.herokuapp.com/api/v1/facilities/search?pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
       headers:<String,String>{
@@ -41,8 +57,26 @@ Future<List<Field>> searchFields(double duration,int fieldTypeId,String searchNa
       })
   );
   Map map = jsonDecode(utf8.decode(response.bodyBytes));
-  // log('status:'+response.statusCode.toString());
-  // log(response.body);
+  log(response.statusCode.toString());
   return parseFields(map['facilityList']);
 
+}
+
+
+Future<Field> getFieldById(int fieldId) async {
+  String accessKey = UserAccessKey.getUserAccessKey() ?? '';
+  var response = await http.get(
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/facilities/'+fieldId.toString()),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer '+ accessKey,
+      }
+  );
+
+  return parseField(response.body);
+}
+
+Field parseField(String response){
+  Map<String,dynamic> parsed = jsonDecode(utf8.decode(response.codeUnits));
+  return Field.fromJson(parsed);
 }

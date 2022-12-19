@@ -1,32 +1,28 @@
 import 'package:equatable/equatable.dart';
 import 'package:football_booking_fbo_mobile/Models/player_model.dart';
 
-abstract class PlayerClubEvent extends Equatable{
-  const PlayerClubEvent();
+abstract class PlayerEvent extends Equatable{
+  const PlayerEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class FetchClubPlayers extends PlayerClubEvent{
-  final int clubId;
-
-  FetchClubPlayers({required this.clubId});
+class FetchPlayers extends PlayerEvent{
 
   @override
-  List<Object> get props => [clubId];
+  List<Object> get props => [];
 }
 
-class DeletePlayer extends PlayerClubEvent{
-  final int clubId;
+class DeletePlayer extends PlayerEvent{
   final int playerId;
-  DeletePlayer({required this.clubId,required this.playerId});
+  DeletePlayer({required this.playerId});
 
   @override
-  List<Object> get props => [clubId,playerId];
+  List<Object> get props => [playerId];
 }
 
-class CreatePlayer extends PlayerClubEvent{
+class CreatePlayer extends PlayerEvent{
   final int clubId;
   final PlayerCreationModel createdPlayer;
   CreatePlayer({required this.createdPlayer,required this.clubId});

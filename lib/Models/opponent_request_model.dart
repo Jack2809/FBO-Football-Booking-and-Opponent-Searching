@@ -12,7 +12,9 @@ class OpponentRequest {
   final int duration;
   final int status;
   final String createdDate;
+  final double teamScore;
   final bool isRivalry ;
+  final bool expired;
 
   OpponentRequest({
     required this.id,
@@ -25,15 +27,17 @@ class OpponentRequest {
     required this.duration,
     required this.status,
     required this.createdDate,
-    required this.isRivalry
+    required this.teamScore,
+    required this.isRivalry,
+    required this.expired
 });
 
   factory OpponentRequest.fromJson(Map<String, dynamic> json) {
     return OpponentRequest(
       id: json['id'] as int,
-      teamId: json['team']['id'] as int,
-      teamName: json['team']['name'] as String,
-      fieldTypeId: json['fieldType']['id'] as int,
+      teamId: json['teamId'] as int,
+      teamName: json['teamName'] as String,
+      fieldTypeId: json['fieldTypeId'] as int,
       bookingDate: json['bookingDate'] as String,
       startFreeTime: json['startFreeTime'] as String,
       endFreeTime: json['endFreeTime'] as String,
@@ -41,6 +45,8 @@ class OpponentRequest {
       status: json['status'] as int,
       createdDate: json['createAt'] as String,
       isRivalry: json['rivalry'] as bool,
+      teamScore: json['teamScore'] as double,
+      expired: json['expired'] as bool
     );
   }
 
@@ -57,9 +63,16 @@ class OpponentRequestDetailModel{
   final String startFreeTime;
   final String endFreeTime;
   final int duration;
-  final int status;
+  int status;
   final String createdDate;
   List<District> districtList;
+  final double teamScore;
+  final double reviewScore;
+  final int reviewCount;
+  final int totalMatches;
+  final bool isRivalry;
+  final bool expired;
+
 
   OpponentRequestDetailModel({
     required this.id,
@@ -74,15 +87,21 @@ class OpponentRequestDetailModel{
     required this.status,
     required this.createdDate,
     required this.districtList,
+    required this.teamScore,
+    required this.isRivalry,
+    required this.expired,
+    required this.reviewScore,
+    required this.reviewCount,
+    required this.totalMatches
 });
 
   factory OpponentRequestDetailModel.fromJson(Map<String, dynamic> json) {
     return OpponentRequestDetailModel(
       id: json['ticket']['id'] as int,
-      teamId: json['ticket']['team']['id'] as int,
-      teamName: json['ticket']['team']['name'] as String,
-      fieldTypeId: json['ticket']['fieldType']['id'] as int,
-      fieldTypeName: json['ticket']['fieldType']['fieldTypeName'] as String,
+      teamId: json['ticket']['teamId'] as int,
+      teamName: json['ticket']['teamName'] as String,
+      fieldTypeId: json['ticket']['fieldTypeId'] as int,
+      fieldTypeName: json['ticket']['fieldTypeName'] as String,
       bookingDate: json['ticket']['bookingDate'] as String,
       startFreeTime: json['ticket']['startFreeTime'] as String,
       endFreeTime: json['ticket']['endFreeTime'] as String,
@@ -90,6 +109,12 @@ class OpponentRequestDetailModel{
       status: json['ticket']['status'] as int,
       createdDate: json['ticket']['createAt'] as String,
       districtList: json['Districts']['districtList'].map<District>((json) => District.fromJson(json)).toList(),
+      teamScore: json['ticket']['teamScore'] as double,
+      isRivalry: json['ticket']['rivalry'] as bool,
+      expired: json['ticket']['expired'] as bool,
+      reviewScore: json['ticket']['teamStar'] as double,
+      reviewCount: json['ticket']['teamReviewCount'] as int,
+      totalMatches: json['ticket']['teamMatches'] as int
     );
   }
 
@@ -105,6 +130,10 @@ class RecommendedRequest {
   final String endFreeTime;
   final String districtNames;
    int status;
+   final double teamScore;
+   final int totalMatches;
+   final int reviewCount;
+   final double reviewScore;
 
   RecommendedRequest({
     required this.id,
@@ -114,7 +143,12 @@ class RecommendedRequest {
     required this.startFreeTime,
     required this.endFreeTime,
     required this.districtNames,
-    required this.status
+    required this.status,
+    required this.teamScore,
+    required this.totalMatches,
+    required this.reviewScore,
+    required this.reviewCount
+
 });
 
   factory RecommendedRequest.fromJson(Map<String, dynamic> json) {
@@ -126,7 +160,11 @@ class RecommendedRequest {
       startFreeTime: json['startFreeTime'] as String,
       endFreeTime: json['endFreeTime'] as String,
       districtNames: json['districtNames'] as String,
-      status: json['isWaiting'] as int
+      status: json['isWaiting'] as int,
+      teamScore: json['teamScore'] as double,
+      totalMatches: json['teamMatches'] as int,
+      reviewScore: json['teamStar'] as double,
+      reviewCount: json['teamReviewCount'] as int
     );
   }
 
@@ -139,6 +177,7 @@ class WaitingRequest {
   final String startFreeTime;
   final String endFreeTime;
   final String districts;
+  final double teamScore;
 
   WaitingRequest({
     required this.id,
@@ -146,7 +185,8 @@ class WaitingRequest {
     required this.teamName,
     required this.startFreeTime,
     required this.endFreeTime,
-    required this.districts
+    required this.districts,
+    required this.teamScore
 });
 
   factory WaitingRequest.fromJson(Map<String,dynamic> json){
@@ -156,7 +196,8 @@ class WaitingRequest {
         teamName: json['teamName'] as String,
         startFreeTime: json['startFreeTime'] as String,
         endFreeTime: json['endFreeTime'] as String,
-        districts: json['districts'] as String
+        districts: json['districts'] as String,
+        teamScore: json['teamScore'] as double
     );
   }
 
@@ -168,13 +209,19 @@ class MatchedRequest {
   final String startFreeTime;
   final String endFreeTime;
   final String districts;
+  final bool isBooker;
+  final double teamScore;
+
 
   MatchedRequest({
     required this.id,
     required this.teamName,
     required this.startFreeTime,
     required this.endFreeTime,
-    required this.districts
+    required this.districts,
+    required this.isBooker,
+    required this.teamScore
+
   });
 
   factory MatchedRequest.fromJson(Map<String,dynamic> json){
@@ -183,7 +230,9 @@ class MatchedRequest {
         teamName: json['teamName'] as String,
         startFreeTime: json['startFreeTime'] as String,
         endFreeTime: json['endFreeTime'] as String,
-        districts: json['districtNames'] as String
+        districts: json['districtNames'] as String,
+        isBooker: json['booker'] as bool,
+        teamScore:json['teamScore'] as double
     );
   }
 

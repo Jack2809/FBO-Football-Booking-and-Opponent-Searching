@@ -9,7 +9,7 @@ class TeamCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = getSize(context);
     return Container(
-      height: size.height * 0.2,
+      height: size.height * 0.21,
       padding: MyPaddingAll10(),
       decoration: BoxDecoration(
           color: primaryColor,
@@ -27,9 +27,8 @@ class TeamCard extends StatelessWidget {
         children: <Widget>[
           Container(
             child: CircleAvatar(
-
               backgroundColor: Colors.white,
-              child: Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/640px-FPT_logo_2010.svg.png',fit: BoxFit.fill),
+              backgroundImage: NetworkImage(team.imageUrl),
               radius: size.height * 0.07,
             ),
           ),
@@ -40,11 +39,25 @@ class TeamCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(width: size.width * 0.8,child: Text('Tên CLB: '+ team.name,)),
+                  Row(children: [
+                    Text('Tên: ',style: HeadLine1(context),),
+                    SizedBox(width: size.width * 0.02,),
+                    Text(team.name,style: TextLine1(context,false),)
+                  ],),
+                  SizedBox(width: size.height * 0.02,),
+                  Row(children: [
+                    Text('Điểm đội: ',style: HeadLine1(context),),
+                    SizedBox(width: size.width * 0.02,),
+                    Text(team.teamScore.toStringAsFixed(1),style: TextLine1(context,false),)
+                  ],),
+                  SizedBox(width: size.height * 0.02,),
+                  Column(crossAxisAlignment:CrossAxisAlignment.start,
+                    children: [
+                    Text('Mô tả: ',style: HeadLine1(context),),
+                    SizedBox(width: size.width * 0.02,),
+                    Text(team.description,style: DescriptionText(context,false),maxLines: 3,)
+                  ],),
 
-                  Container(width: size.width * 0.8 ,child: Text('Số thành viên: ' ,)),
-
-                  Container(width: size.width * 0.8,child: Text('Mô tả: '+ team.name,)),
 
 
                 ],

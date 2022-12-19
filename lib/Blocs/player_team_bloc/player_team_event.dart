@@ -34,3 +34,11 @@ class AddTeamPlayer extends PlayerTeamEvent{
   @override
   List<Object> get props => [teamId,newPlayer];
 }
+
+class ShowPopUpMessagePlayer extends PlayerTeamEvent{
+  final String content;
+  ShowPopUpMessagePlayer({required this.content});
+
+  @override
+  List<Object> get props => [content];
+}

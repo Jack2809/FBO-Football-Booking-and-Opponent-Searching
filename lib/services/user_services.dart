@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:football_booking_fbo_mobile/Models/user_model.dart';
 import 'package:football_booking_fbo_mobile/providers/google_login.dart';
+import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
 import 'package:http/http.dart' as http;
 
 UserModel parseUserModel (String response){
@@ -36,10 +38,9 @@ UserInfoModel parseUserInfoModel (String response){
   return UserInfoModel.fromJson(parsed1);
 }
 
-Future<UserInfoModel> getCurrentUser() async {
-  var userModel = await fetchUserIdAndAccessToken();
+Future<UserInfoModel> getCurrentUser(int userId) async {
   log("(3)");
-  var response = await http.get(Uri.parse('https://football-booking-app.herokuapp.com/api/v1/accounts/'+userModel.id.toString()),
+  var response = await http.get(Uri.parse('https://football-booking-app.herokuapp.com/api/v1/accounts/'+userId.toString()),
     headers: <String,String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -48,4 +49,35 @@ Future<UserInfoModel> getCurrentUser() async {
   return parseUserInfoModel(response.body);
 
 }
+
+
+Future<String> updateUser (int userId,String email,String name,String image,String birthday,String phone,String address) async {
+
+  String accessKey = UserAccessKey.getUserAccessKey() ?? '';
+  var response = await http.put(
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/accounts/'+userId.toString()),
+      headers: <String,String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer '+ accessKey,
+      },
+      body : jsonEncode(<String,String>{
+        "email": email,
+      "address": address,
+      "dateOfBirth": birthday,
+      "image": image,
+      "name": name,
+      "phoneNumber": phone
+      })
+  );
+  log('Update User Status:'+response.statusCode.toString());
+  if(response.statusCode == 200){
+    return "Cập nhật thành công";
+  }else if (response.statusCode == 400){
+    return "Cập nhật thất bại";
+  }else{
+    return "Server lỗi";
+  }
+}
+
+
 

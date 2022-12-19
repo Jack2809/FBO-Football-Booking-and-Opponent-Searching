@@ -3,22 +3,23 @@
 class BookedFacilityByPost {
   final int facilityId;
   final String facilityName;
-  final String fieldTypeId;
-  final String address;
-  final String bookingDate;
+  final String dateReserved;
   final String startTime;
-  final String endTime;
-  final String districtName;
 
   BookedFacilityByPost({
     required this.facilityId,
     required this.facilityName,
-    required this.fieldTypeId,
-    required this.address,
-    required this.bookingDate,
-    required this.startTime,
-    required this.endTime,
-    required this.districtName
+    required this.dateReserved,
+    required this.startTime
+
   });
 
+factory BookedFacilityByPost.fromJson(Map<String, dynamic> json){
+  return BookedFacilityByPost(
+    facilityId: json['facilityId'] as int,
+    facilityName: json['facilityName'] as String,
+    dateReserved: json['dateReserved'] as String,
+    startTime: json['startTime'] as String,
+  );
+}
 }

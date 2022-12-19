@@ -9,12 +9,15 @@ abstract class OpponentRequestState extends Equatable{
   List<Object> get props => [];
 }
 
+
+
 class LoadingOpponentRequests extends OpponentRequestState{
 
 }
 
 class LoadedOpponentRequests extends OpponentRequestState{
-  final List<OpponentRequest> requestList;
+
+  List<OpponentRequest> requestList;
 
   LoadedOpponentRequests({required this.requestList});
 
@@ -22,4 +25,6 @@ class LoadedOpponentRequests extends OpponentRequestState{
   List<Object> get props => [requestList];
 
 }
+
+
 
