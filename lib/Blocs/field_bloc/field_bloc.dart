@@ -8,9 +8,10 @@ import 'package:football_booking_fbo_mobile/services/field_services.dart';
 class FieldBloc extends Bloc<FieldEvent,FieldState>{
   FieldBloc() : super (LoadingFields()){
 
-    on<SearchFields> ((event,emit) async{
+
+    on<FetchFields> ((event,emit) async{
       emit(LoadingFields());
-      var fieldList = await searchFields(event.duration, event.fieldTypeId, event.searchContent, event.chosenDate);
+      var fieldList = await fetchFields(event.districtId);
       emit(LoadedFields(fieldList: fieldList));
 
     });

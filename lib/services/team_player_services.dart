@@ -6,11 +6,11 @@ import 'package:football_booking_fbo_mobile/services/access_key_shared_reference
 import 'package:http/http.dart' as http;
 
 
-List<Player> parseTeamPlayers(List responseBody){
-  return responseBody.map<Player>((json) =>Player.fromJson(json)).toList();
+List<TeamPlayer> parseTeamPlayers(List responseBody){
+  return responseBody.map<TeamPlayer>((json) =>TeamPlayer.fromJson(json)).toList();
 }
 
-Future<List<Player>> fetchTeamPlayers (int teamId) async {
+Future<List<TeamPlayer>> fetchTeamPlayers (int teamId) async {
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.get(
     Uri.parse('https://football-booking-app.herokuapp.com/api/v1/teams/'+teamId.toString()+'/players?active=1&pageNo=0&pageSize=10&sortBy=id&sortDir=asc'),
@@ -52,5 +52,13 @@ Future<String> addPlayerInTeam (int teamId,PlayerCreationModel player) async {
         "playerName": player.name
       })
   );
+  if(response.statusCode == 200){
+    return "Tạo cầu thủ thành công";
+  }else if(response.statusCode == 400){
+    return "Tạo cầu thủ thất bại do số điện thoại đã được sử dụng,vui lòng sử dụng SDT khác";
+  }else{
+    return 'Server Lỗi';
+  }
+
   return response.body;
 }

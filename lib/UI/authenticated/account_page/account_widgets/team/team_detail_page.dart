@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_bloc.dart';
@@ -7,11 +6,16 @@ import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_e
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_state.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/team_detail_bloc/team_detail_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/team_detail_bloc/team_detail_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/team_detail_bloc/team_detail_state.dart';
 import 'package:football_booking_fbo_mobile/Models/team_model.dart';
-import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/player_card.dart';
+import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/team_player_card.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/team/player_creation.dart';
 import 'package:football_booking_fbo_mobile/Validator/player_validator.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
+
+import 'team_update_page.dart';
 
 class TeamDetail extends StatefulWidget {
   Team team;
@@ -24,32 +28,32 @@ class TeamDetail extends StatefulWidget {
 }
 
 class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
+
   @override
   void dispose() {
-    nameC.dispose();
-    phoneC.dispose();
-    emailC.dispose();
-    jerseyNoC.dispose();
-    ageC.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    BlocProvider.of<TeamBloc>(context)
-        .add(FetchTeams());
+    BlocProvider.of<TeamDetailBloc>(context).add(FetchTeamDetail(teamId: widget.team.id));
+
     BlocProvider.of<PlayerTeamBloc>(context).add(FetchTeamPlayers(teamId: widget.team.id));
+
     super.initState();
+    BlocProvider.of<TeamBloc>(context).listenerStream.listen((event) {
+      if(event == ""){
+
+      }else if(event == "Bạn đã xóa đội"){
+        successfulDialog1Pop(context, event);
+      }else if(event == 'Xóa đội thất bại'){
+        failDialog(context, event);
+      }else{
+        errorDialog(context, event);
+      }
+    });
   }
 
-  final formGlobalKey = GlobalKey<FormState>();
-
-  TextEditingController nameC = TextEditingController();
-  TextEditingController phoneC = TextEditingController();
-  TextEditingController emailC = TextEditingController();
-  TextEditingController jerseyNoC = TextEditingController();
-  TextEditingController ageC = TextEditingController();
-  bool _isDelete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,69 +76,139 @@ class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
 
         actions: [
           IconButton(
+            icon: Icon(Icons.edit,color: Colors.white),
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateTeamPage(team: widget.team,)));
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.delete,color: Colors.white),
             onPressed: (){
               _showDeletingTeam();
-
             },
           ),
         ],
 
       ),
-      body: Form(
-        key: formGlobalKey,
-        child: Container(
-          color: Colors.grey.withOpacity(0.02),
-          padding: MyPaddingAll10(),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: primaryColor,
-                    backgroundImage: NetworkImage(widget.team.imageUrl),
-                    radius: size.height * 0.1,
-                  ),
-                ),
-                Center(child: Text(widget.team.name, style: TextLine1(true))),
-                Text(
-                  'Mô tả',
-                  style: HeadLine1(),
-                ),
-                Text(widget.team.description, style: TextLine2(),maxLines:5),
-                Text('Danh sách cầu thủ trong Đôi Hình:',style: HeadLine1()),
-                BlocBuilder<PlayerTeamBloc, PlayerTeamState>(
-                    builder: (context, state) {
-                  if (state is LoadingTeamPlayers) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is LoadedTeamPlayers) {
-
-                    if (state.teamPlayersList.isEmpty) {
+      body: Container(
+        color: Colors.grey.withOpacity(0.02),
+        padding: MyPaddingAll10(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              BlocBuilder<TeamDetailBloc, TeamDetailState>(
+                  builder: (context, state) {
+                    if (state is LoadingTeamDetail) {
                       return Center(
-                        child: Text('Không có Player nào !'),
+                        child: CircularProgressIndicator(),
                       );
+                    } else if (state is LoadedTeamDetail) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: CircleAvatar(
+                                backgroundColor: primaryColor,
+                                backgroundImage: NetworkImage(state.team.imageUrl),
+                                radius: size.height * 0.1,
+                              ),
+                            ),
+                            Center(child: Text(state.team.name, style: TextLine1(context,true))),
+                            SizedBox(height: size.height * 0.03,),
+                            Text(
+                              'Thông tin đội',
+                              style: HeadLine1(context),
+                            ),
+                            Divider(
+                              color:Colors.grey,
+                              indent: 10.0,
+                              endIndent: 10.0,
+                            ),
+                            Row(
+                              children: [
+                                Text('Điểm tích lũy: ',style: TextLine1(context,true)),
+                                Spacer(),
+                                Text(state.team.accumulatedScore.toStringAsFixed(1),style: TextLine1(context, false)),
+                              ],
+                            ),
+                            Divider(
+                              color:Colors.grey,
+                              indent: 10.0,
+                              endIndent: 10.0,
+                            ),
+                            Row(
+                              children: [
+                                Text('Điểm đội: ',style: TextLine1(context,true)),
+                                Spacer(),
+                                Text(state.team.teamScore.toStringAsFixed(1),style: TextLine1(context, false)),
+                              ],
+                            ),
+                            Divider(
+                              color:Colors.grey,
+                              indent: 10.0,
+                              endIndent: 10.0,
+                            ),
+                            Row(
+                              children: [
+                                Text('Tổng trận: ',style: TextLine1(context,true)),
+                                Spacer(),
+                                Text(state.team.totalMatches.toString(),style: TextLine1(context, false)),
+                              ],
+                            ),
+                            Divider(
+                              color:Colors.grey,
+                              indent: 10.0,
+                              endIndent: 10.0,
+                            ),
+                            SizedBox(height: size.height * 0.02,),
+                            Text(
+                              'Mô tả',
+                              style: HeadLine1(context),
+                            ),
+                            SizedBox(height: size.height * 0.02,),
+                            Text(state.team.description, style: TextLine1(context,false),maxLines:5),
+                          ],
+                        );
                     } else {
-                      return ListView.separated(
-                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 5.0),
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: state.teamPlayersList.length,
-                          itemBuilder: ((context, index) {
-                            return PlayerCard(team:widget.team,player: state.teamPlayersList[index],);
-                          }));
+                      return Center(
+                        child: Text('Something wrong!!'),
+                      );
                     }
-                  } else {
+                  }),
+              SizedBox(height: size.height * 0.03,),
+              Text('Danh sách cầu thủ trong đội hình',style: HeadLine1(context)),
+              SizedBox(height: size.height * 0.02,),
+              BlocBuilder<PlayerTeamBloc, PlayerTeamState>(
+                  builder: (context, state) {
+                if (state is LoadingTeamPlayers) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is LoadedTeamPlayers) {
+
+                  if (state.teamPlayersList.isEmpty) {
                     return Center(
-                      child: Text('Something wrong!!'),
+                      child: Text('Không có Player nào !'),
                     );
+                  } else {
+                    return ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 5.0),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: state.teamPlayersList.length,
+                        itemBuilder: ((context, index) {
+                          return index == 0 ? HeadTeamPlayerCard(team: widget.team, player: state.teamPlayersList[index]) : TeamPlayerCard(team:widget.team,player: state.teamPlayersList[index],);
+                        }));
                   }
-                }),
-                SizedBox(height: size.height * 0.1),
-              ],
-            ),
+                } else {
+                  return Center(
+                    child: Text('Something wrong!!'),
+                  );
+                }
+              }),
+              SizedBox(height: size.height * 0.1),
+            ],
           ),
         ),
       ),
@@ -144,10 +218,8 @@ class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
           color: Colors.green,
         ),
         child: TextButton.icon(
-          onPressed: () async{
-            final result = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreatePlayerPage(team: widget.team)));
-            if(!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>  CreateTeamPlayerPage(team: widget.team)));
           },
           icon: Icon(Icons.person_add_rounded,color:Colors.white),
           label: Text('Thêm cầu thủ',style: MyButtonText()),
@@ -157,44 +229,22 @@ class _TeamDetailState extends State<TeamDetail> with InputPlayerValidation{
   }
 
 
-  Future<void > _showDeletingTeam() async {
-    return showDialog<void>(
+  Future<dynamic> _showDeletingTeam(){
+    return AwesomeDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Xóa Đội Hình'),
-          content: Text('Bạn thật sự muốn xóa Đội Hình chứ ?'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Xóa'),
-              onPressed: () {
-                setState(() {
-                  _isDelete = true ;
-                });
-                BlocProvider.of<TeamBloc>(context).add(DeleteTeam(teamId: widget.team.id));
-                Navigator.pop(context);
-                Navigator.pop(context,'Đội hình đã được xóa');
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Hủy bỏ'),
-              onPressed: () {
-                setState(() {
-                  _isDelete = false ;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+      dialogType: DialogType.question,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Xóa Đội',
+      desc: 'Bạn có thật sự muốn xóa đội chứ ?',
+      buttonsTextStyle: const TextStyle(color: Colors.black),
+      showCloseIcon: true,
+      btnOkOnPress: () {
+        BlocProvider.of<TeamBloc>(context).add(DeleteTeam(teamId: widget.team.id));
       },
-    );
+      btnCancelOnPress: (){
+      },
+    ).show();
   }
 
 }

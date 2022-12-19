@@ -1,27 +1,22 @@
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:football_booking_fbo_mobile/Blocs/player_bloc/player_bloc.dart';
-import 'package:football_booking_fbo_mobile/Blocs/player_bloc/player_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_event.dart';
 import 'package:football_booking_fbo_mobile/Models/player_model.dart';
 import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 import 'package:football_booking_fbo_mobile/Validator/player_validator.dart';
-
 import '../../../../../constants.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 
-class CreatePlayerPage extends StatefulWidget{
+class CreateTeamPlayerPage extends StatefulWidget{
   Team team;
-  CreatePlayerPage({required this.team});
+  CreateTeamPlayerPage({required this.team});
 
   @override
-  State<CreatePlayerPage> createState() => _CreatePlayerPageState();
+  State<CreateTeamPlayerPage> createState() => _CreateTeamPlayerPageState();
 }
 
-class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerValidation{
+class _CreateTeamPlayerPageState extends State<CreateTeamPlayerPage> with InputPlayerValidation{
 
   final formGlobalKey = GlobalKey<FormState>();
 
@@ -40,6 +35,23 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
   TextEditingController emailC = TextEditingController();
   TextEditingController jerseyNoC = TextEditingController();
   TextEditingController ageC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<PlayerTeamBloc>(context).listenerStream.listen((event) {
+      if(event == ""){
+
+      } else if(event == "Tạo cầu thủ thành công"){
+          successfulDialog1Pop(context, event);
+        }else if(event == "Tạo cầu thủ thất bại do số điện thoại đã được sử dụng,vui lòng sử dụng SDT khác"){
+          failDialog(context, event);
+        }else{
+          errorDialog(context, event);
+        }
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +91,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                     TextFormField(
                       controller: nameC,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.person),
+                        prefix: Icon(Icons.person,color: Colors.green),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -89,14 +101,15 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                         if(isValidName(name)){
                           return null;
                         }
-                        return "Tên Cầu Thủ không được để trống !";
+                        return "Tên Cầu Thủ không được để trống hoặc nhỏ hơn 3 ký tự !";
                       },
                     ),
                     SizedBox(height: 10.0,),
                     TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: phoneC,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.phone),
+                        prefix: Icon(Icons.phone,color: Colors.green),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -113,7 +126,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                     TextFormField(
                       controller: emailC,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.mail),
+                        prefix: Icon(Icons.mail,color: Colors.green),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -131,7 +144,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                       keyboardType: TextInputType.number,
                       controller: jerseyNoC,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.mail),
+                        prefix: Icon(FontAwesome5.tshirt,color: Colors.green,size: 15.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -141,7 +154,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                         if(isValidJersey(jersey)){
                           return null;
                         }
-                        return "Số Áo không được để trống hoặc số âm !";
+                        return "Số Áo không được để trống hoặc số âm hoặc bằng 0!";
                       },
                     ),
                     SizedBox(height: 10.0,),
@@ -149,7 +162,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                       keyboardType: TextInputType.number,
                       controller: ageC,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.mail),
+                        prefix: Icon(Icons.cake_outlined,color: Colors.green),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -160,7 +173,7 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                         if(isValidAge(age)){
                           return null;
                         }
-                        return "Số Tuổi không được để trống và số âm !";
+                        return "Số Tuổi không được để trống và số âm và nhỏ hơn 4 !";
                       },
                     ),
                     SizedBox(height: size.height * 0.1,),
@@ -175,7 +188,6 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                         onPressed: () {
                           if(formGlobalKey.currentState!.validate()) {
                             if(formGlobalKey.currentState!.validate()) {
-                              log('Processing!!!');
                               var name = nameC.text;
                               var phone = phoneC.text;
                               var email = emailC.text;
@@ -188,12 +200,6 @@ class _CreatePlayerPageState extends State<CreatePlayerPage> with InputPlayerVal
                                   email: email,
                                   age: int.parse(age));
                               BlocProvider.of<PlayerTeamBloc>(context).add(AddTeamPlayer(teamId: widget.team.id, newPlayer: newPlayer));
-                              nameC.text = "";
-                              phoneC.text = "";
-                              emailC.text = "";
-                              jerseyNoC.text = "";
-                              ageC.text = "";
-                              Navigator.of(context).pop('Cầu Thủ đã được tạo ra');
                             }
 
                           }

@@ -1,12 +1,9 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_bloc.dart';
-import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_event.dart';
-import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_state.dart';
+import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_search_bloc/field_search_bloc.dart';
+import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_search_bloc/field_search_event.dart';
+import 'package:football_booking_fbo_mobile/Blocs/field_bloc/field_search_bloc/field_search_state.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'field_card.dart';
 import 'field_detail.dart';
@@ -87,10 +84,18 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
         actions: [
           IconButton(
               onPressed: (){
-                setState(() {
-                  isFirstSearch = false;
-                });
-                BlocProvider.of<FieldBloc>(context).add(SearchFields(searchContent: searchContentC.text, chosenDate: chosenDaySearch, duration: durationSearch, fieldTypeId: fieldTypeIdSearch));
+                if(searchContentC.text == ""){
+
+                }else {
+                  setState(() {
+                    isFirstSearch = false;
+                  });
+                  BlocProvider.of<FieldSearchBloc>(context).add(SearchFields(
+                      searchContent: searchContentC.text,
+                      chosenDate: chosenDaySearch,
+                      duration: durationSearch,
+                      fieldTypeId: fieldTypeIdSearch));
+                }
               },
               icon: Icon(Icons.search,color: Colors.white,))
         ],
@@ -108,7 +113,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Thời lượng',style: TextLine1(true)),
+                        Text('Thời lượng',style: TextLine1(context,true)),
                         Container(
                           decoration: BoxDecoration(
                             color: primaryColor,
@@ -133,7 +138,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Loại sân',style: TextLine1(true)),
+                        Text('Loại sân',style: TextLine1(context,true)),
                         Container(
                           decoration: BoxDecoration(
                             color: primaryColor,
@@ -158,7 +163,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Ngày',style: TextLine1(true)),
+                        Text('Ngày',style: TextLine1(context,true)),
                         Container(
                           decoration: BoxDecoration(
                             color: primaryColor,
@@ -171,7 +176,6 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                                     showTitleActions: true,
                                     minTime: DateTime.now(),
                                     maxTime: DateTime.now().add(Duration(days: 365)), onChanged: (date) {
-                                      print('change $date');
                                     }, onConfirm: (date) {
                                       setState(() {
                                         chosenDaySearch = DateFormat('yyyy-MM-dd').format(date);
@@ -188,12 +192,12 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                   ],
                 ),
                 SizedBox(height: 10.0,),
-                BlocBuilder<FieldBloc,FieldState>(
+                BlocBuilder<FieldSearchBloc,FieldSearchState>(
                     builder:(context,state){
-                      if(state is LoadingFields){
+                      if(state is LoadingSearchFields){
                         return isFirstSearch ? SizedBox():Center(child: CircularProgressIndicator(),);
                       }
-                      else if(state is LoadedFields){
+                      else if(state is LoadedSearchFields){
                         if(state.fieldList.isEmpty){
                           return Center(child: Text('Không có sân theo nội dung tim kiếm'),);
                         }else{
@@ -219,7 +223,7 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
                                             MaterialPageRoute(builder: (context) => FieldDetail(field: state.fieldList[index])),
                                           );
                                         },
-                                        child: FieldCard(state.fieldList[index],size),
+                                        child: FieldCard(context,state.fieldList[index],size),
                                       ),
                                     ),
                                   );
@@ -243,87 +247,3 @@ class _SearchFieldPageState extends State<SearchFieldPage> {
     );
   }
 }
-
-
-// class CustomSearch extends SearchDelegate{
-//   final List<Field> list;
-//   CustomSearch({required this.list});
-//
-//   List<Widget> buildActions(BuildContext context) {
-//     return [
-//       IconButton(
-//           onPressed: (){
-//             query = '';
-//           },
-//           icon: Icon(Icons.close))
-//     ];
-//   }
-//
-//   @override
-//   Widget buildLeading(BuildContext context) {
-//     return IconButton(
-//         onPressed: (){
-//           close(context, '');
-//         },
-//         icon: Icon(Icons.arrow_back_ios));
-//   }
-//
-//   @override
-//   Widget buildResults (BuildContext context) {
-//     Size size = getSize(context);
-//     List<Field> matchList = [];
-//     for (var item in list){
-//       if(item.name.toLowerCase().contains(query.toLowerCase())){
-//         matchList.add(item);
-//       }
-//     }
-//     return Container(
-//       padding: MyPaddingAll(),
-//       child: ListView.builder(
-//         padding: MyPaddingAll(),
-//           itemCount: matchList.length,
-//           itemBuilder: (context,index){
-//             var result = matchList[index];
-//             return GestureDetector(
-//                 onTap: (){
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => FieldDetail(field: result)),
-//                   );
-//                 },
-//                 child: HorizontalFieldCard(result, size)
-//             );
-//           }
-//       ),
-//     );
-//   }
-//
-//   @override
-//   Widget buildSuggestions (BuildContext context) {
-//
-//     return Container();
-//     // Size size = MediaQuery.of(context).size;
-//     // List<Field> matchList = [];
-//     // for (var item in list){
-//     //   if(item.name.toLowerCase().contains(query.toLowerCase())){
-//     //     matchList.add(item);
-//     //   }
-//     // }
-//     // return ListView.builder(
-//     //     itemCount: matchList.length,
-//     //     itemBuilder: (context,index){
-//     //       var result = matchList[index];
-//     //       return GestureDetector(
-//     //         onTap: (){
-//     //           Navigator.push(
-//     //             context,
-//     //             MaterialPageRoute(builder: (context) => FieldDetail(field: result)),
-//     //           );
-//     //         },
-//     //           child: HorizontalFieldCard(result, size)
-//     //       );
-//     //     }
-//     // );
-//   }
-//
-// }

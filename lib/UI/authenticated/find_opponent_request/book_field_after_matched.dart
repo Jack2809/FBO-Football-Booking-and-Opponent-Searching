@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/facility_with_matched_post_bloc/facility_with_matched_post_state.dart';
@@ -11,6 +10,7 @@ import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_pos
 import 'package:football_booking_fbo_mobile/Blocs/time_slot_booking_facitily_post_bloc/time_slot_state.dart';
 import 'package:football_booking_fbo_mobile/Models/field_model.dart';
 import 'package:football_booking_fbo_mobile/Models/opponent_request_model.dart';
+import 'package:football_booking_fbo_mobile/Models/time_slot_model.dart';
 import 'package:football_booking_fbo_mobile/UI/authenticated/find_opponent_request/book_facility_by_zalo_pay.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:group_button/group_button.dart';
@@ -55,10 +55,14 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
 
   bool _isFirstLoadTimeSlot = true;
 
-  bool _isChosenFacility = false;
+  bool? _isChosenFacility ;
+
+  bool _isAppropriateStartTime = false;
+
+  bool _isFirstClickedConfirm = true;
 
   void _selectTimeStart(TimeOfDay timeStart, TimeOfDay timeEnd,
-      int duration) async {
+      int duration,List<TimeSlot> timeslots) async {
     final TimeOfDay? newTime = await showIntervalTimePicker(
       context: context,
       initialTime: timeStart,
@@ -69,6 +73,8 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
       int endTimeMinutes = ((timeEnd.hour * 60) + timeEnd.minute) - duration;
       int chosenTimeMinutes = (newTime.hour * 60) + newTime.minute;
       int startTimeMinutes = (timeStart.hour * 60) + timeStart.minute;
+
+
       if (endTimeMinutes >= chosenTimeMinutes &&
           chosenTimeMinutes >= startTimeMinutes) {
         setState(() {
@@ -85,7 +91,8 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
     }
   }
 
-  String caculateEndTime(String endTime, int duration) {
+
+  String calculateEndTime(String endTime, int duration) {
     int endTimeMinutes = int.parse(endTime.split(':')[0]) * 60 +
         int.parse(endTime.split(':')[1]);
     int finalEndTimeMinutes = endTimeMinutes - duration;
@@ -93,28 +100,6 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
     List<String> parts = _duration.toString().split(':');
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]))
         .format(context);
-  }
-
-  void _showSuccessfulPayment() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Thanh toán'),
-            content: Text('Bạn đã thanh toán tiền đặt cọc sân thành công'),
-            actions: <Widget>[
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                      ..pop()..pop();
-                  },
-                  child: Text('Xác nhận'),
-                ),
-              )
-            ],
-          );
-        });
   }
 
 
@@ -142,14 +127,14 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
         child: BlocBuilder<
             FacilityWithMatchedPostBloc,
             FacilityWithMatchedPostState>(
-            builder: (context, state) {
-              if (state is LoadingFacilityWithMatchedPost) {
+            builder: (context, facilityState) {
+              if (facilityState is LoadingFacilityWithMatchedPost) {
                 return Center(
                   child:
                   CircularProgressIndicator(),
                 );
-              } else if (state is LoadedFacilityWithMatchedPost) {
-                if (state.facilityData.facilityList.isEmpty) {
+              } else if (facilityState is LoadedFacilityWithMatchedPost) {
+                if (facilityState.facilityData.facilityList.isEmpty) {
                   return Center(child: Text('Không có sân'));
                 }
                 else {
@@ -159,17 +144,17 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                       SizedBox(
                         height: 30.0,
                       ),
-                      Text('Chọn sân', style: HeadLine1(),),
+                      Text('Chọn sân', style: HeadLine1(context),),
                       SizedBox(height: 10.0,),
                       Center(
                         child: GestureDetector(
                             onTap: () {
                               _showChoosingFacility(
-                                  state.facilityData.facilityList);
+                                  facilityState.facilityData.facilityList);
                             },
                             child: Container(
                               width: size.width * 0.95,
-                              height: size.height * 0.05,
+                              height: size.height * 0.08,
                               decoration: BoxDecoration(
                                 color: primaryColor,
                                 borderRadius: BorderRadius.circular(10),
@@ -181,19 +166,22 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                                 children: [
                                   Text(
                                       'Ấn để chọn sân',
-                                      style: Black12TextLine(false)),
+                                      style: Black26TextLine(context,false)),
                                 ],
                               ))
-                                  : Center(child: Row(
+                                  : Center(child: Column(
+                                    children: [
+                                      Column(
                                 children: [
-                                  Text("Sân đã chọn: ",
-                                      style: Black12TextLine(false)),
-                                  Spacer(),
-                                  Text(_facility!.name + " - " +
-                                      _facility!.districtName,
-                                      style: TextLine1(false)),
+                                      Text("Sân đã chọn: ",
+                                          style: Black26TextLine(context,false)),
+                                      Text(_facility!.name + " - " +
+                                          _facility!.districtName,
+                                          style: TextLine1(context,false)),
                                 ],
-                              )),
+                              ),
+                                    ],
+                                  )),
                             )),
                       ),
                       _isChosenFacility == false ? Center(child: Text(
@@ -217,7 +205,7 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Thời gian trống có thể đặt sân',
-                                        style: HeadLine1()),
+                                        style: HeadLine1(context)),
                                     SizedBox(height: 10.0,),
                                     GridView.builder(
                                         physics: NeverScrollableScrollPhysics(),
@@ -254,6 +242,134 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                                         }
 
                                     ),
+
+                                    SizedBox(height: 20.0,),
+                                    Text('Chọn giờ đá', style: HeadLine1(context),),
+                                    SizedBox(height: 10.0,),
+                                    Center(
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            String startTimeStr = facilityState.facilityData
+                                                .matchedTimeStart;
+                                            String endTimeStr = facilityState.facilityData
+                                                .matchedTimeEnd;
+                                            TimeOfDay startTime = TimeOfDay(
+                                                hour: int.parse(startTimeStr.split(':')[0]),
+                                                minute: int.parse(
+                                                    startTimeStr.split(':')[1]));
+                                            TimeOfDay endTime = TimeOfDay(
+                                                hour: int.parse(endTimeStr.split(':')[0]),
+                                                minute: int.parse(endTimeStr.split(':')[1]));
+                                            _selectTimeStart(startTime, endTime,
+                                                widget.myRequest.duration,state.timeSlotList);
+                                          },
+                                          child: Container(
+                                            width: size.width * 0.95,
+                                            height: size.height * 0.05,
+                                            decoration: BoxDecoration(
+                                              color: primaryColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(color: Colors.black12),
+                                            ),
+                                            child: _timeStart == null
+                                                ? Center(child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    'Ấn chọn giờ đá',
+                                                    style: Black26TextLine(context,false)),
+                                              ],
+                                            ))
+                                                : Center(child: Row(
+                                              children: [
+                                                Text("Giờ đã chọn: ",
+                                                    style: Black26TextLine(context,false)),
+                                                Spacer(),
+                                                Text(_timeStart!.format(context),
+                                                    style: TextLine1(context,false)),
+                                              ],
+                                            )),
+                                          )),
+                                    ),
+                                    _isValidTimeStart ? SizedBox() : (timeFormat(
+                                        facilityState.facilityData.matchedTimeStart) == timeFormat(
+                                        calculateEndTime(facilityState.facilityData.matchedTimeEnd,
+                                            widget.myRequest.duration))) ? Center(
+                                      child: Text('Thời gian đặt phải là ' + timeFormat(facilityState
+                                          .facilityData.matchedTimeStart), style: TextStyle(
+                                          color: Colors.red)),) : Center(child: Text(
+                                      'Thời gian đá phải trong khoảng ' + timeFormat(
+                                        facilityState.facilityData.matchedTimeStart,) + '-' +
+                                          timeFormat(calculateEndTime(
+                                              facilityState.facilityData.matchedTimeEnd,
+                                              widget.myRequest.duration)), style: TextStyle(
+                                        color: Colors.red),)),
+
+
+                                    SizedBox(height: 20.0,),
+                                    _isFirstClickedConfirm?SizedBox():!_isAppropriateStartTime ? Text('Giờ đá chưa phù hợp với giờ trống của sân',style: ErrorText(),textAlign: TextAlign.center,):SizedBox(),
+                                    Container(
+                                      width: size.width,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      child: TextButton.icon(
+                                        icon: Icon(Icons.calendar_today, color: Colors
+                                            .white,),
+                                        onPressed: () {
+                                          if (_facility == null || _timeStart == null) {
+                                            if (_facility == null) {
+                                              setState(() {
+                                                _isChosenFacility = false;
+                                              });
+                                            }
+                                            if (_timeStart == null) {
+                                              setState(() {
+                                                _isValidTimeStart = false;
+                                              });
+                                            }
+                                          } else {
+                                            int timeStartMinutes = _timeStart!.hour * 60 +_timeStart!.minute;
+                                            String availableStartTime ;
+                                            String availableEndTime;
+                                            int availableStartTimeMinutes;
+                                            int availableEndTimeMinutes;
+                                            for(int i = 0;i < state.timeSlotList.length;i++){
+                                              // availableStartTime =TimeOfDay.fromDateTime(DateTime.parse(state.timeSlotList[i].startTime)).format(context);
+                                              // availableEndTime =TimeOfDay.fromDateTime(DateTime.parse(state.timeSlotList[i].endTime)).format(context);
+                                              availableStartTimeMinutes = int.parse(state.timeSlotList[i].startTime.split(":")[0])* 60 + int.parse(state.timeSlotList[i].startTime.split(":")[1]);
+                                              availableEndTimeMinutes = int.parse(state.timeSlotList[i].endTime.split(":")[0])* 60 + int.parse(state.timeSlotList[i].endTime.split(":")[1]);
+                                              if(timeStartMinutes >= availableStartTimeMinutes && timeStartMinutes <= availableEndTimeMinutes - widget.myRequest.duration){
+                                                setState(() {
+                                                  _isAppropriateStartTime = true;
+                                                });
+                                              }
+                                            }
+                                            setState(() {
+                                              _isFirstClickedConfirm = false ;
+                                            });
+                                            DateTime temp = DateTime.parse(
+                                                widget.myRequest.bookingDate);
+                                            DateTime startTime = DateTime(
+                                                temp.year, temp.month, temp.day,
+                                                _timeStart!.hour, _timeStart!.minute);
+                                            final f = new DateFormat('yyyy-MM-dd HH:mm:ss');
+                                            String startTimeStr = f.format(startTime);
+                                            if(_isAppropriateStartTime){
+                                              Navigator.push(context, MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ZaloPaymentScreen(
+                                                          facilityId: _facility!.id,
+                                                          startTime: startTimeStr,
+                                                          myRequest: widget.myRequest)));
+                                            }
+                                          }
+                                        },
+                                        label: Text('Xác nhận', style: MyButtonText()),
+                                      ),
+                                    ),
+
                                   ],
                                 );
                               }
@@ -263,133 +379,7 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                             }
                           }
                       ) : SizedBox(),
-                      SizedBox(height: 20.0,),
-                      Text('Chọn giờ đá', style: HeadLine1(),),
-                      SizedBox(height: 10.0,),
-                      Center(
-                        child: GestureDetector(
-                            onTap: () {
-                              String startTimeStr = state.facilityData
-                                  .matchedTimeStart;
-                              String endTimeStr = state.facilityData
-                                  .matchedTimeEnd;
-                              TimeOfDay startTime = TimeOfDay(
-                                  hour: int.parse(startTimeStr.split(':')[0]),
-                                  minute: int.parse(
-                                      startTimeStr.split(':')[1]));
-                              TimeOfDay endTime = TimeOfDay(
-                                  hour: int.parse(endTimeStr.split(':')[0]),
-                                  minute: int.parse(endTimeStr.split(':')[1]));
-                              _selectTimeStart(startTime, endTime,
-                                  widget.myRequest.duration);
-                            },
-                            child: Container(
-                              width: size.width * 0.95,
-                              height: size.height * 0.05,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.black12),
-                              ),
-                              child: _timeStart == null
-                                  ? Center(child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      'Ấn chọn giờ đá',
-                                      style: Black12TextLine(false)),
-                                ],
-                              ))
-                                  : Center(child: Row(
-                                children: [
-                                  Text("Giờ đã chọn: ",
-                                      style: Black12TextLine(false)),
-                                  Spacer(),
-                                  Text(_timeStart!.format(context),
-                                      style: TextLine1(false)),
-                                ],
-                              )),
-                            )),
-                      ),
-                      _isValidTimeStart ? SizedBox() : (timeFormat(
-                          state.facilityData.matchedTimeStart) == timeFormat(
-                          caculateEndTime(state.facilityData.matchedTimeEnd,
-                              widget.myRequest.duration))) ? Center(
-                        child: Text('Thời gian đặt phải là ' + timeFormat(state
-                            .facilityData.matchedTimeStart), style: TextStyle(
-                            color: Colors.red)),) : Center(child: Text(
-                        'Thời gian đá phải trong khoảng ' + timeFormat(
-                          state.facilityData.matchedTimeStart,) + '-' +
-                            timeFormat(caculateEndTime(
-                                state.facilityData.matchedTimeEnd,
-                                widget.myRequest.duration)), style: TextStyle(
-                          color: Colors.red),)),
-                      SizedBox(height: 20.0,),
-                      Container(
-                        width: size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: TextButton.icon(
-                          icon: Icon(Icons.calendar_today, color: Colors
-                              .white,),
-                          onPressed: () {
-                            if (_facility == null || _timeStart == null) {
-                              if (_facility == null) {
-                                setState(() {
-                                  _isChosenFacility = false;
-                                });
-                              }
-                              if (_timeStart == null) {
-                                setState(() {
-                                  _isValidTimeStart = false;
-                                });
-                              }
-                            } else {
-                              DateTime temp = DateTime.parse(
-                                  widget.myRequest.bookingDate);
-                              DateTime startTime = DateTime(
-                                  temp.year, temp.month, temp.day,
-                                  _timeStart!.hour, _timeStart!.minute);
-                              final f = new DateFormat('yyyy-MM-dd HH:mm:ss');
-                              String startTimeStr = f.format(startTime);
-                              log('My request :' +
-                                  widget.myRequest.id.toString());
-                              log("Facility Id: " +
-                                  widget.myRequest.id.toString());
-                              log('duration :' +
-                                  widget.myRequest.duration.toString());
-                              log('FieldTypeId :' +
-                                  widget.myRequest.fieldTypeId.toString());
-                              log("startDateTime:" + startTimeStr);
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) =>
-                                      ZaloPaymentScreen(
-                                          facilityId: _facility!.id,
-                                          startTime: startTimeStr,
-                                          myRequest: widget.myRequest)));
-                            }
-                            DateTime temp = DateTime.parse(
-                                widget.myRequest.bookingDate);
-                            DateTime startTime = DateTime(
-                                temp.year, temp.month, temp.day,
-                                _timeStart!.hour, _timeStart!.minute);
-                            final f = new DateFormat('yyyy-MM-dd hh:mm:ss');
-                            String startTimeStr = f.format(startTime);
-                            log('My request :' +
-                                widget.myRequest.id.toString());
-                            log("Facility Id: " +
-                                widget.myRequest.id.toString());
-                            log('duration :' +
-                                widget.myRequest.duration.toString());
-                            log('FieldTypeId :' +
-                                widget.myRequest.fieldTypeId.toString());
-                            log("startDateTime:" + startTimeStr);
-                          },
-                          label: Text('Xác nhận', style: MyButtonText()),
-                        ),
-                      ),
+
 
                     ],
                   );
@@ -456,6 +446,19 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
             ),
           ),
           actions: <Widget>[
+
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme
+                    .of(context)
+                    .textTheme
+                    .labelLarge,
+              ),
+              child: const Text('Hủy bỏ'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             TextButton(
               style: TextButton.styleFrom(
                 textStyle: Theme
@@ -471,24 +474,13 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
                   _isFirstLoadTimeSlot = false;
                   _isChosenFacility = true;
                 });
+                String bookingDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.parse(widget.myRequest.bookingDate));
                 BlocProvider.of<TimeSlotBloc>(context).add(FetchTimeSlot(
                     facilityId: _facility!.id,
-                    bookingDate: widget.myRequest.bookingDate,
+                    bookingDate: bookingDate,
                     fieldTypeId: widget.myRequest.fieldTypeId));
 
                 Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme
-                    .of(context)
-                    .textTheme
-                    .labelLarge,
-              ),
-              child: const Text('Hủy bỏ'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],

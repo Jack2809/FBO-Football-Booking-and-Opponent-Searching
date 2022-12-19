@@ -6,11 +6,17 @@ class UserAccessKey {
 
   static Future init() async => _prefs = await SharedPreferences.getInstance();
 
-  static Future<void> saveAccessKey(Future<UserModel> user) async{
-    UserModel userTemp = await user;
+//   static Future<void> saveAccessKey(Future<UserModel> user) async{
+//     UserModel userTemp = await user;
+//     await _prefs.setString('userAccessKey', userTemp.accessToken);
+//
+// }
+
+  static void saveAccessKey(UserModel user) async{
+    UserModel userTemp = user;
     await _prefs.setString('userAccessKey', userTemp.accessToken);
 
-}
+  }
 
  static String? getUserAccessKey(){
     return _prefs.getString('userAccessKey');

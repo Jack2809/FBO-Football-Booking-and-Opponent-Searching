@@ -25,7 +25,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-
             </intent-filter>
 
             <intent-filter>
@@ -51,8 +50,7 @@
            android:value="demozpdk://app" />
        <meta-data
            android:name="com.vng.zalo.sdk.ENVIRONMENT"
-
-           android:value="SANDBOX" />
+           android:value="SANDBOX" /> // OR value="PRODUCTION"
 
     </application>
 </manifest>

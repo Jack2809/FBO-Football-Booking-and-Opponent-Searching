@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:football_booking_fbo_mobile/Models/field_model.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'field_booking1.dart';
 
 class DateAndFieldTypePage extends StatefulWidget{
+  Field field;
 
+  DateAndFieldTypePage({required this.field});
 
 
   @override
@@ -51,7 +54,7 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text("Chọn ngày đá",style: HeadLine(),),
+                Text("Chọn ngày đá",style: HeadLine(context),),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -73,7 +76,7 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
                   ),
                 ),
 
-                Text("Chọn loại sân",style: HeadLine(),),
+                Text("Chọn loại sân",style: HeadLine(context),),
 
                 SizedBox(height: size.height * 0.01),
 
@@ -103,7 +106,7 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
                       ),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Center(child: Text('5 vs 5',style:HeadLine())),
+                    child: Center(child: Text('5 vs 5',style:HeadLine(context))),
                   ),
                 ),
 
@@ -135,7 +138,7 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
                     ),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Center(child: Text('7 vs 7',style:HeadLine())),
+                    child: Center(child: Text('7 vs 7',style:HeadLine(context))),
                   ),
                 ),
 
@@ -163,11 +166,12 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
             ),
             child: Text("Tiến tục",style: MyButtonText()),
             onPressed: _chosenFieldType == "" ? (){
-              _showFieldChosenAlert();
+              showFieldTypeChoosenAndTimeAlert();
             } : (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PickingBookingTimePage()),
+                MaterialPageRoute(builder: (context) => PickingBookingTimePage(
+                  field:widget.field,bookingDate: convertDate(_selectedDate.toString()),fieldTypeName:_chosenFieldType,)),
               );
             }
         ),
@@ -175,30 +179,21 @@ class _DateAndFieldTypePageState extends State<DateAndFieldTypePage> {
     );
   }
 
-  Future<void> _showFieldChosenAlert() async {
-    return showDialog<void>(
+
+  void showFieldTypeChoosenAndTimeAlert(){
+    AwesomeDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Vui lòng chọn sân'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('Người dùng vui lòng chọn loại sân để tiếp tục'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+      dialogType: DialogType.warning,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Loại sân và ngày đá',
+      desc: "Bạn vui lòng chọn sân và ngày đá để tiếp tục",
+      buttonsTextStyle: const TextStyle(color: Colors.black),
+      showCloseIcon: true,
+      btnOkOnPress: () {
+
       },
-    );
+    ).show();
   }
+
 }

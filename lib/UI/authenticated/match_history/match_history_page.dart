@@ -9,7 +9,6 @@ import 'package:football_booking_fbo_mobile/Blocs/team_bloc/team_state.dart';
 import 'package:football_booking_fbo_mobile/Models/team_model.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:group_button/group_button.dart';
-
 import 'match_history_card.dart';
 import 'match_history_detail.dart';
 
@@ -55,18 +54,17 @@ class _MatchHistoryPageState extends State<MatchHistoryPage> {
             } else if (state is LoadedTeams) {
               if (state.teamList.isEmpty) {
                 return Center(
-                  child: Text('Không có đội hình nào'),
+                  child: Text('Không có đội để xem lịch sử trận đấu'),
                 );
               } else {
                 if(_isFirstLoad){
                   _teamId = state.teamList.first.id;
                   _teamName = state.teamList.first.name;
                 }
-
                 BlocProvider.of<MatchHistoryBloc>(context)
                     .add(FetchMatchHistory(teamId: _teamId));
                 return SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
                       GestureDetector(
@@ -99,20 +97,23 @@ class _MatchHistoryPageState extends State<MatchHistoryPage> {
                                   spreadRadius: 0.0,
                                 ),
                               ]),
-                          child: Center(child: Text(_teamName,style: TextLine1(true),)),
+                          child: Center(child: Text(_teamName,style: TextLine1(context,true),)),
                         ),
                       ),
 
                       BlocBuilder<MatchHistoryBloc, MatchHistoryState>(
                           builder: (context, state) {
                             if (state is LoadingMatchHistory) {
-                              return Center(
-                                child: CircularProgressIndicator(),
+                              return Container(
+                                height: size.height * 0.8,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
                             } else if (state is LoadedMatchHistory) {
                               if (state.matchHistoryList.isEmpty) {
                                 return Center(
-                                  child: Text('Không có lịch sử trận đấu nào'),
+                                  child: Text('Không có lịch sử trận đấu nào của đội này'),
                                 );
                               } else {
                                 return ListView.separated(
@@ -120,13 +121,13 @@ class _MatchHistoryPageState extends State<MatchHistoryPage> {
                                         (BuildContext context, int index) =>
                                     const SizedBox(height: 10.0),
                                     padding: MyPaddingAll10(),
-                                    physics: AlwaysScrollableScrollPhysics(),
+                                    physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: state.matchHistoryList.length,
                                     itemBuilder: ((context, index) {
                                       return GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> MatchHistoryDetail(matchHistory: state.matchHistoryList[index])));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> MatchHistoryDetail(matchHistory: state.matchHistoryList[index],myTeamId: _teamId,)));
                                         },
                                         child: MatchHistoryCard(
                                             matchHistory:
@@ -214,6 +215,15 @@ class _MatchHistoryPageState extends State<MatchHistoryPage> {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
+              child: const Text('Hủy bỏ'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
               child: const Text('OK'),
               onPressed: () {
 
@@ -230,15 +240,6 @@ class _MatchHistoryPageState extends State<MatchHistoryPage> {
 
                   Navigator.pop(context);
                 }
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Hủy bỏ'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],

@@ -20,6 +20,7 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
   void initState() {
     BlocProvider.of<OpponentRequestBloc>(context).add(FetchOpponentRequests());
     super.initState();
+
   }
 
   @override
@@ -35,16 +36,8 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.add,color: Colors.white),
-            onPressed: () async{
-              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
-              if(!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text(result)));
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.search,color: Colors.white),
-            onPressed: (){
-
+            onPressed: () {
+               Navigator.push(context, MaterialPageRoute(builder: (context) => CreateOpponentRequestPage()));
             },
           ),
         ],

@@ -15,13 +15,37 @@ class CreateTeamPage extends StatefulWidget{
 }
 
 class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidation{
+
+  @override
+  void dispose() {
+    teamNameC.dispose();
+    descriptionC.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TeamBloc>(context).listenerStream.listen((event) {
+      if(event ==""){
+
+      }else if(event == "Tạo đội thành công"){
+        successfulDialog1Pop(context, event);
+      }else if (event == "Tạo đội thất bại do tên đội đã được sử dụng"){
+        failDialog(context, event);
+      }else{
+        errorDialog(context, event);
+      }
+    });
+  }
+
   final formGlobalKey = GlobalKey<FormState>();
 
   final teamNameC = TextEditingController();
 
   final descriptionC = TextEditingController();
 
-  String _imageLink = '';
+  String _imageLink = 'https://storage.googleapis.com/football-appilication.appspot.com/bb98c3bb-f1ce-4357-8663-eae0e37a6f15jpg';
 
   Future pickImage() async{
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -66,23 +90,26 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(_imageLink),
-                      radius: size.height * 0.05,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Positioned(
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt,color: Colors.green),
-                              onPressed: (){
-                                pickImage();
-                              },
-                            ),
-                          ),
-                        ],
+
+                CircleAvatar(
+                  backgroundImage: NetworkImage(_imageLink),
+                  radius: size.height * 0.1,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: IconButton(
+                          icon: Icon(
+                              Icons.camera_alt, color: Colors.green),
+                          onPressed: () {
+                            pickImage();
+                          },
+                        ),
                       ),
-                    ),
+                    ],
+                  ),
+                ),
                     SizedBox(height: 10.0,),
                     Container(
                       decoration: BoxDecoration(
@@ -92,7 +119,7 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                       child: TextFormField(
                         controller: teamNameC,
                         decoration: InputDecoration(
-                          prefix: Icon(Icons.person) ,
+                          prefix: Icon(Icons.title) ,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -103,11 +130,10 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                             return null;
                           }
                           return "Tên Đội Hình phải trên 5 ký tự !";
-
                         },
                       ),
                     ),
-                    SizedBox(height: size.height * 0.1,),
+                    SizedBox(height: size.height * 0.05,),
 
                     Container(
                       decoration: BoxDecoration(
@@ -115,11 +141,27 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: TextFormField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          labelText: "Mô tả",
+                          hintText: 'Nhập mô tả ở đây'
+                        ),
                         controller: descriptionC,
                         keyboardType: TextInputType.multiline,
                         maxLines: 5,
-                      )
+                        validator: (description){
+                          if(isValidDescription(description)){
+                            return null;
+                          }
+                          return "Mô tả đội hình phải trên 9 ký tự !";
+                        },
+                      ),
+
                     ),
+
+                    SizedBox(height: size.height * 0.05,),
 
                     Container(
                       width: size.width * 0.9,
@@ -133,8 +175,7 @@ class _CreateTeamPageState extends State<CreateTeamPage> with InputTeamValidatio
                             String teamName = teamNameC.text;
                             String description = descriptionC.text;
                             BlocProvider.of<TeamBloc>(context).add(CreateTeam(teamName: teamName,imageUrl: _imageLink,description:  description));
-                            Navigator.pop(context,'Đội hình của bạn đã được tạo');
-
+                            // Navigator.of(context).pop();
                           }
                         },
                         icon: Icon(Icons.add,color:Colors.white),

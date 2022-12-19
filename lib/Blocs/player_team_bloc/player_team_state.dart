@@ -15,7 +15,7 @@ class LoadingTeamPlayers extends PlayerTeamState{
 }
 
 class LoadedTeamPlayers extends PlayerTeamState{
-  final List<Player> teamPlayersList;
+  final List<TeamPlayer> teamPlayersList;
 
   LoadedTeamPlayers({required this.teamPlayersList});
 

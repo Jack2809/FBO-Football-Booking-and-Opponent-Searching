@@ -1,10 +1,11 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:football_booking_fbo_mobile/Blocs/user_bloc/user_bloc.dart';
 import 'package:football_booking_fbo_mobile/Blocs/user_bloc/user_event.dart';
 import 'package:football_booking_fbo_mobile/Blocs/user_bloc/user_state.dart';
+import 'package:football_booking_fbo_mobile/UI/authenticated/account_page/account_widgets/player_page/players_page.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
 import 'package:football_booking_fbo_mobile/services/access_key_shared_references.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,10 @@ import 'account_widgets/team/teams_page.dart';
 import 'account_widgets/edit_account/edit_account_page.dart';
 
 class AccountPage extends StatefulWidget {
+
+  final int userId;
   
-  AccountPage();
+  AccountPage({required this.userId});
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -29,7 +32,7 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
 
     super.initState();
-    BlocProvider.of<UserBloc>(context).add(FetchUser());
+    BlocProvider.of<UserBloc>(context).add(FetchUser(userId: widget.userId));
   }
 
   @override
@@ -159,6 +162,29 @@ class _AccountPageState extends State<AccountPage> {
                                               ]
                                           ),
                                           child: GestureDetector(
+                                              onTap: (){
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => PlayerPage()),
+                                                );
+                                              },
+                                              child: AccountCard(context, FontAwesome5.tshirt, "Cầu thủ của tôi")
+                                          ),
+                                        ),
+                                        SizedBox(height:15.0,),
+
+
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 5.0,
+                                                  spreadRadius: 3.0,
+                                                ),
+                                              ]
+                                          ),
+                                          child: GestureDetector(
                                             onTap: (){
                                               showDialog<void>(
                                                 context: context,
@@ -167,6 +193,16 @@ class _AccountPageState extends State<AccountPage> {
                                                     title: const Text('Đăng xuất'),
                                                     content: Text('Bạn thật sự muốn đăng xuất ?'),
                                                     actions: <Widget>[
+
+                                                      TextButton(
+                                                        style: TextButton.styleFrom(
+                                                          textStyle: Theme.of(context).textTheme.labelLarge,
+                                                        ),
+                                                        child: const Text('Hủy bỏ'),
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                      ),
                                                       TextButton(
                                                         style: TextButton.styleFrom(
                                                           textStyle: Theme.of(context).textTheme.labelLarge,
@@ -175,15 +211,6 @@ class _AccountPageState extends State<AccountPage> {
                                                         onPressed: () {
                                                           final provider = Provider.of<GoogleLoginProvider>(context,listen: false);
                                                           provider.logout();
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                      ),
-                                                      TextButton(
-                                                        style: TextButton.styleFrom(
-                                                          textStyle: Theme.of(context).textTheme.labelLarge,
-                                                        ),
-                                                        child: const Text('Hủy bỏ'),
-                                                        onPressed: () {
                                                           Navigator.of(context).pop();
                                                         },
                                                       ),
@@ -276,7 +303,7 @@ class _AccountPageState extends State<AccountPage> {
         children: <Widget>[
           Icon(icon,size: 30.0,color: Colors.green),
           SizedBox(width:5.0,),
-          Text(title,style:TextLine1(false),),
+          Text(title,style:TextLine1(context,false),),
           Spacer(),
           Icon(Icons.arrow_forward_ios),
         ],

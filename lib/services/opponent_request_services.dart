@@ -12,7 +12,7 @@ Future<List<OpponentRequest>> fetchOpponentRequests () async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.get(
 
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=20&sortBy=bookingDate&sortDir=desc'),
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets?pageNo=0&pageSize=50&sortBy=id&sortDir=desc'),
 
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -76,20 +76,33 @@ Future<String> createOpponentRequest (List<int> districtIdList,
         'isRivalry': isRivalry
       })
   );
-  log(response.body);
-  return response.body;
+  if(response.statusCode ==200){
+    return 'tạo yêu cầu thành công';
+  }else if(response.statusCode == 400){
+    return 'tạo yêu cầu thất bại';
+  }else{
+    return 'server lỗi';
+  }
+
 }
 
 Future<String> deleteOpponentRequest(int requestId) async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.delete(
-    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/posts/'+requestId.toString()),
+    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets/'+requestId.toString()),
     headers:<String,String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer '+ accessKey,
     },
   );
-  return response.body;
+  if(response.statusCode == 200){
+    return "Xóa yêu cầu thành công";
+  }
+  else if(response.statusCode == 400){
+    return "Xóa yêu cầu thất bại";
+  }else{
+    return "Server Lỗi";
+  }
 }
 
 Future<List<RecommendedRequest>> getRecommendedRequest (int requestId) async{
@@ -133,7 +146,7 @@ List<WaitingRequest> parseWaitingRequest(List responseBody){
 Future<String> sendChallenge (int myRequestId,int opponentRequestId,int myTeamId) async{
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.post(
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets/{id}/join'),
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets-join'),
       headers:<String,String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,

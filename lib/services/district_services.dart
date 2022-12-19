@@ -14,7 +14,7 @@ List<District> parseDistricts(List responseBody){
 Future<List<District>> fetchAllDistricts () async {
   String accessKey = UserAccessKey.getUserAccessKey() ?? "";
   var response = await http.get(
-      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/districts'),
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/districts?pageSize=22'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer '+ accessKey,

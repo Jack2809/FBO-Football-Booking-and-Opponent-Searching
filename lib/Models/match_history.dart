@@ -10,6 +10,10 @@ class MatchHistory {
   final String facilityName;
   final String address;
   final String district;
+  final String bookingDate;
+  final String homeTeamImage;
+  final String awayTeamImage;
+  final bool rivalry;
 
   MatchHistory(
       {required this.matchId,
@@ -22,7 +26,12 @@ class MatchHistory {
       required this.homeTeamId,
       required this.homeTeamName,
       required this.awayTeamId,
-      required this.awayTeamName});
+      required this.awayTeamName,
+        required this .bookingDate,
+        required this.homeTeamImage,
+        required this.awayTeamImage,
+        required this.rivalry
+      });
 
   factory MatchHistory.fromJson(Map<String, dynamic> json) {
     return MatchHistory(
@@ -36,6 +45,11 @@ class MatchHistory {
         facilityId: json["facilityId"] as int,
         facilityName: json["facilityName"] as String,
         address: json["address"] as String,
-        district: json["district"] as String);
+        district: json["district"] as String,
+      bookingDate: json['date'] as String,
+      homeTeamImage: json['homeTeamImage'] as String,
+      awayTeamImage: json['awayTeamImage'] as String,
+      rivalry: json['rivalry'] as bool
+    );
   }
 }

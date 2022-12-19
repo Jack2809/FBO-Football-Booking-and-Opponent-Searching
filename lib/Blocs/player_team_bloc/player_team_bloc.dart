@@ -8,10 +8,18 @@ import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_e
 import 'package:football_booking_fbo_mobile/Blocs/player_team_bloc/player_team_state.dart';
 import 'package:football_booking_fbo_mobile/services/club_player_services.dart';
 import 'package:football_booking_fbo_mobile/services/team_player_services.dart';
+import 'package:rxdart/subjects.dart';
 
 
 
 class PlayerTeamBloc extends Bloc<PlayerTeamEvent,PlayerTeamState>{
+
+  final BehaviorSubject<dynamic> _listenerController = BehaviorSubject<dynamic>();
+
+
+
+  Sink<dynamic> get listener => _listenerController.sink;
+  Stream<dynamic> get listenerStream => _listenerController.stream;
 
   PlayerTeamBloc() : super (LoadingTeamPlayers()){
     on<FetchTeamPlayers> ((event,emit) async{
@@ -22,10 +30,11 @@ class PlayerTeamBloc extends Bloc<PlayerTeamEvent,PlayerTeamState>{
 
     on<AddTeamPlayer> ((event,emit) async{
       emit(LoadingTeamPlayers());
-      var addedTeamPlayers = await addPlayerInTeam(event.teamId,event.newPlayer);
-      log("add message:"+addedTeamPlayers);
+      var addedTeamPlayer = await addPlayerInTeam(event.teamId,event.newPlayer);
+      listener.add(addedTeamPlayer);
       var fetchedTeamPlayersAfterAddition = await fetchTeamPlayers(event.teamId);
       emit(LoadedTeamPlayers(teamPlayersList:fetchedTeamPlayersAfterAddition));
+      listener.add('');
     });
 
     on<DeleteTeamPlayer> ((event,emit) async{
@@ -36,7 +45,10 @@ class PlayerTeamBloc extends Bloc<PlayerTeamEvent,PlayerTeamState>{
       emit(LoadedTeamPlayers(teamPlayersList:fetchedTeamPlayers ));
     });
 
-
   }
+
+  // void dispose(){
+  //   _listenerController.close();
+  // }
 
 }

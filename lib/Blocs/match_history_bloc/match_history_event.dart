@@ -1,6 +1,7 @@
 
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 
 abstract class MatchHistoryEvent extends Equatable{
   const MatchHistoryEvent();
@@ -16,5 +17,6 @@ class FetchMatchHistory extends MatchHistoryEvent{
   FetchMatchHistory({required this.teamId});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [teamId];
 }
+
