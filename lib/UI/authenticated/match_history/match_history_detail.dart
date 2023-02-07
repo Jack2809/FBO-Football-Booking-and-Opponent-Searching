@@ -1,3 +1,6 @@
+
+import 'dart:developer';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +12,7 @@ import 'package:football_booking_fbo_mobile/Blocs/review_player_in_match_bloc/re
 import 'package:football_booking_fbo_mobile/Blocs/review_player_in_match_bloc/review_player_state.dart';
 import 'package:football_booking_fbo_mobile/Models/match_history.dart';
 import 'package:football_booking_fbo_mobile/constants.dart';
+import 'package:football_booking_fbo_mobile/services/match_history_services.dart';
 
 import 'match_history_card.dart';
 
@@ -54,8 +58,11 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
   final formGlobalKey = GlobalKey<FormState>();
 
 
+
+
   @override
   Widget build(BuildContext context) {
+    log(widget.matchHistory.matchId.toString());
     Size size = getSize(context);
     return Scaffold(
       appBar: AppBar(
@@ -238,10 +245,19 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                                  ),
                                ),
                              ]
+                           ],
+                           SizedBox(height: size.height * 0.05,),
+                           if(state.matchScores.homeTeam.homeScore.isNegative || state.matchScores.awayTeam.homeScore.isNegative)...[
+                             SizedBox(),
+                           ]
+                           else if(state.matchScores.homeTeam.homeScore == state.matchScores.awayTeam.homeScore
+                           && state.matchScores.homeTeam.awayScore == state.matchScores.awayTeam.awayScore)...[
+                             Text('Ghi chú : 2 đội đã nhập kết quả phù hợp, hệ thống đã tính điểm cho 2 đội'),
+                           ]else ...[
+                             Text('Ghi chú : 2 đội đã nhập kết quả không trùng khớp, hệ thống sẽ không tính điểm cho 2 đội')
                            ]
 
-
-                         ],
+                         ]
                        );
                       }
                       else {
@@ -263,7 +279,7 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                       Expanded(child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text:'Tên sân: ',style: HeadLine1(context)),
-                          TextSpan(text: widget.matchHistory.facilityName,style: TextLine1(context,true))
+                          TextSpan(text: widget.matchHistory.facilityName,style: TextLine1(context,false))
                         ],
                       )),
                       )],
@@ -277,7 +293,7 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                       Expanded(child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text:'Địa chỉ: ',style: HeadLine1(context)),
-                          TextSpan(text: widget.matchHistory.address +" - "+widget.matchHistory.district,style: TextLine1(context,true))
+                          TextSpan(text: widget.matchHistory.address +" - "+widget.matchHistory.district,style: TextLine1(context,false))
                         ],
                       )),
                       )
@@ -291,7 +307,7 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                       Expanded(child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text:'Ngày đá: ',style: HeadLine1(context)),
-                          TextSpan(text: dateFormat(widget.matchHistory.bookingDate),style: TextLine1(context,true))
+                          TextSpan(text: dateFormat(widget.matchHistory.bookingDate),style: TextLine1(context,false))
                         ],
                       )),
                       )]
@@ -304,7 +320,7 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                       Expanded(child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text:'Giờ đá: ',style: HeadLine1(context)),
-                          TextSpan(text: timeFormat(widget.matchHistory.startTime)+" - " +timeFormat(widget.matchHistory.endTime),style: TextLine1(context,true))
+                          TextSpan(text: timeFormat(widget.matchHistory.startTime)+" - " +timeFormat(widget.matchHistory.endTime),style: TextLine1(context,false))
                         ],
                       )),
                       )
@@ -401,6 +417,9 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                         if(int.parse(myScore).isNegative){
                           return 'Tỷ số không được âm';
                         }
+                        if(int.parse(myScore) > 150){
+                          return 'Tỷ số không thể vượt quá 150 bàn';
+                        }
                       },
                     ),
                   ),
@@ -426,6 +445,9 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                         }
                         if(int.parse(enemyScore).isNegative){
                           return 'Tỷ số không được âm';
+                        }
+                        if(int.parse(enemyScore) > 150){
+                          return 'Tỷ số không thể vượt quá 150 bàn';
                         }
                       },
                     ),
@@ -461,16 +483,27 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
                     desc: 'Bạn đã chắc chắn tỷ số được nhập đúng như thực tế chứ ?',
                     buttonsTextStyle: const TextStyle(color: Colors.black),
                     showCloseIcon: true,
-                    btnOkOnPress: () {
-                      BlocProvider.of<MatchHistoryScoreBloc>(context).add(SubmitScore(
+                    btnOkOnPress: () async {
+                      BlocProvider.of<MatchHistoryScoreBloc>(context).add(AddScore(
                           matchId: widget.matchHistory.matchId,
                           teamId: widget.myTeamId,
                           homeScore: int.parse(homeTeamScoreC.text),
                           awayScore: int.parse(awayTeamScoreC.text),
                           rivalry:  widget.matchHistory.rivalry
                       ));
-                      // Future.delayed(Duration(seconds:3),(){BlocProvider.of<MatchHistoryScoreBloc>(context).add(FetchMatchHistoryScore(matchId: widget.matchHistory.matchId, teamId: widget.myTeamId));});
-                      Navigator.pop(context);
+
+                       // await isScoreConflict(widget.matchHistory.matchId);
+                      if(await isScoreConflict(widget.matchHistory.matchId,widget.myTeamId)){
+                        warningScoreConflictDialog(context);
+                      }else{
+                        BlocProvider.of<MatchHistoryScoreBloc>(context).add(SubmitScore(
+                            matchId: widget.matchHistory.matchId,
+                            teamId: widget.myTeamId,
+                            rivalry:  widget.matchHistory.rivalry
+                        ));
+                        Navigator.of(context).pop();
+                      }
+
                     },
                     btnCancelOnPress: (){},
                   ).show();
@@ -481,6 +514,28 @@ class _MatchHistoryDetailState extends State<MatchHistoryDetail> {
         );
       },
     );
+  }
+
+  Future<void> warningScoreConflictDialog(BuildContext context){
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Cảnh Báo',
+      desc: 'Tỷ số bạn đang nhập không trừng khớp với đội đối thủ , bạn có chắc chắn chứ ?',
+      buttonsTextStyle: const TextStyle(color: Colors.black),
+      showCloseIcon: true,
+      btnOkOnPress: () {
+        BlocProvider.of<MatchHistoryScoreBloc>(context).add(SubmitScore(
+            matchId: widget.matchHistory.matchId,
+            teamId: widget.myTeamId,
+            rivalry:  widget.matchHistory.rivalry
+        ));
+        Navigator.of(context).pop();
+      },
+      btnCancelOnPress: (){}
+    ).show();
   }
 
 }

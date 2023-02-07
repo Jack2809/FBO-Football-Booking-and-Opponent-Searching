@@ -67,7 +67,7 @@ class _OpponentRequestPageState extends State<OpponentRequestPage> {
                           itemBuilder: ((context, index) {
                             return GestureDetector(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(requestId: state.requestList[index].id,requestStatus: state.requestList[index].status,)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  OpponentRequestDetail(requestId: state.requestList[index].id,requestStatus: state.requestList[index].status,expired: state.requestList[index].expired,)));
                               },
                               child: OpponentRequestCard(requestItem: state.requestList[index]),
                             );

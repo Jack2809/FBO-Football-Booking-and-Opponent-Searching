@@ -27,7 +27,8 @@ import 'view_detail_facility_in_post.dart';
 class OpponentRequestDetail extends StatefulWidget {
   int requestId;
   int requestStatus;
-  OpponentRequestDetail({required this.requestId, required this.requestStatus});
+  bool expired ;
+  OpponentRequestDetail({required this.requestId, required this.requestStatus,required this.expired});
 
   @override
   State<OpponentRequestDetail> createState() => _OpponentRequestDetailState();
@@ -44,8 +45,35 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
 
       } else if(event == "Xóa yêu cầu thành công"){
         successfulDialog1Pop(context, event);
-      }else if(event == "Xóa yêu cầu thất bại"){
+      }else if(event == "Không thể xóa yêu cầu vì đang trong quá trình đặt sân hoặc đã hoàn thành trận đấu"){
         failDialog(context, event);
+      }else{
+        errorDialog(context, event);
+      }
+
+    });
+    BlocProvider.of<WaitingRequestBloc>(context).listenerStream.listen((event) {
+      if(event == ""){
+
+      }else if(event =="Chấp nhận yêu cầu thành công"){
+        successfulDialog(context, event);
+      }
+      else if(event == "Yêu cầu này đã không còn khả dụng"){
+        failDialog(context, event);
+      }else{
+        errorDialog(context, event);
+      }
+
+    });
+
+    BlocProvider.of<RecommendedRequestBloc>(context).listenerStream.listen((event) {
+      if(event == ""){
+
+      } else if(event == "Hủy bỏ thành công"){
+        successfulDialog(context, event);
+      }else if(event == "Hủy bỏ thất bại, vì yêu cầu của bạn đã được cáp kèo"){
+        failDialog(context, event);
+        getTicketDetail();
       }else{
         errorDialog(context, event);
       }
@@ -61,6 +89,7 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
   void initialPage(int postId,int status){
     log("ticket status: " +status.toString());
     log('ticket id: ' + postId.toString());
+    BlocProvider.of<OpponentRequestBloc>(context).add(FetchOpponentRequests());
     if (status == 1) {
       BlocProvider.of<OpponentRequestDetailBloc>(context)
           .add(FetchOpponentRequestDetail(requestId: postId));
@@ -87,6 +116,7 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
   void refreshPage(int postId,int status){
     log("ticket status: " +status.toString());
     log('ticket id: ' + postId.toString());
+    BlocProvider.of<OpponentRequestBloc>(context).add(FetchOpponentRequests());
     if (status == 1) {
       BlocProvider.of<RecommendedRequestBloc>(context)
           .add(GetRecommendedRequest(requestId: postId));
@@ -116,12 +146,14 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
         title: Text('Chi tiết yêu cầu', style: WhiteTitleText()),
         centerTitle: true,
         actions: [
-          TextButton(
-            child: Text('Xóa', style: TextStyle(color: Colors.red)),
+          IconButton(
+            icon: Icon(Icons.delete,color: Colors.red),
             onPressed: () {
               _showDeletingOpponentRequest();
             },
           ),
+
+
         ],
         leading: IconButton(
           onPressed: () {
@@ -209,7 +241,7 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
                                                       if (state.requestList.isEmpty) {
                                                         return Center(
                                                             child: Text(
-                                                              'hiện tại Không có yêu cầu phù hợp nào',
+                                                              'Hiện tại Không có yêu cầu phù hợp nào',
                                                               style: Black26TextLine(context,
                                                                   false),
                                                             ));
@@ -315,7 +347,7 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
                                                                             .requestDetail,
                                                                         requestItem:
                                                                         state.requestList[index],
-                                                                        callBack: (){initialPage(myState.requestDetail.id,2);},
+                                                                        callBack: (){getTicketDetail();},
                                                                       ),
 
                                                                     );
@@ -387,7 +419,7 @@ class _OpponentRequestDetailState extends State<OpponentRequestDetail> {
                                                           )));
 
                                               if(result){
-                                                initialPage(myState.requestDetail.id, 3);
+                                                getTicketDetail();
                                               }
 
                                             },

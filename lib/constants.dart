@@ -44,6 +44,14 @@ TextStyle HeadLine (BuildContext context){
   );
 }
 
+TextStyle StatusLine (BuildContext context){
+  return TextStyle(
+    fontWeight: FontWeight.bold,
+    color: Colors.green,
+    fontSize: getSize(context).width * 0.05,
+  );
+}
+
 String convertDateTimeToTimeOfDay(BuildContext context,String dateTime){
   TimeOfDay temp = TimeOfDay(hour: int.parse(dateTime.split(":")[0]), minute: int.parse(dateTime.split(":")[1]));
   return temp.format(context);
@@ -54,7 +62,7 @@ String convertDateTimeToTimeOfDay(BuildContext context,String dateTime){
 TextStyle HeadLine1 (BuildContext context){
   return TextStyle(
     fontWeight: FontWeight.bold,
-    color: Colors.green,
+    color: Colors.black,
     fontSize: getSize(context).width * 0.05,
   );
 }
@@ -156,11 +164,11 @@ TextStyle MyButtonText1 (){
   );
 }
 
-TextStyle ErrorText (){
+TextStyle ErrorText (BuildContext context){
   return TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.red,
-    fontSize: 20.0,
+    fontSize: getSize(context).width * 0.05,
   );
 }
 

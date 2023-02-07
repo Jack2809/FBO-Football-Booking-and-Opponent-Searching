@@ -33,37 +33,43 @@ Widget FieldCard (BuildContext context, Field field,Size size){
             ),
           ),
         ),
-           SizedBox(height:15.0,),
+           SizedBox(height:size.height * 0.02,),
 
            Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: <Widget>[
-               Text('Tên sân bóng',style: HeadLine1(context),),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                   children: <Widget>[
-                     Icon(FontAwesome.soccer_ball,size: 16,color: Colors.green,),
-                     SizedBox(width:10.0,),
-                     Container(
-                       width: size.width * 0.34,
-                       child: Text(
-                         softWrap: true,
-                         maxLines: 2,
-                         field.name,
-                         style:TextLine2(context),
-                       ),
-                     ),
-                   ],
-                 ),
-               SizedBox(height:5.0,),
-               Text('Giờ hoạt động',style: HeadLine1(context),),
                Row(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: <Widget>[
-                   Icon(FontAwesome.clock,size: 18,color: Colors.green,),
-                   SizedBox(width:10.0,),
+                 children: [
+                   Icon(Icons.sports_soccer,color: Colors.green,),
+                   Text('Tên sân bóng',style: HeadLine1(context),),
+                 ],
+               ),
+                  Row(
+                    children: [
+                      SizedBox(width: size.width * 0.07),
+                      Container(
+                        width: size.width * 0.32,
+                        child: Text(
+                          softWrap: true,
+                          maxLines: 2,
+                          field.name,
+                          style:TextLine2(context),
+                        ),
+                      ),
+                    ],
+                  ),
+               SizedBox(height:size.height * 0.01,),
+               Row(
+                 children: [
+                   Icon(FontAwesome.clock,color: Colors.green,),
+                   Text('Giờ hoạt động',style: HeadLine1(context),),
+                 ],
+               ),
+               Row(
+                 children: [
+                   SizedBox(width: size.width * 0.07),
                    Container(
-                     width: size.width * 0.34,
+                     width: size.width * 0.32,
                      child: Text(
                        softWrap: true,
                        maxLines: 2,
@@ -73,15 +79,18 @@ Widget FieldCard (BuildContext context, Field field,Size size){
                    ),
                  ],
                ),
-               SizedBox(height:5.0,),
-               Text('Khu vực',style: HeadLine1(context),),
+               SizedBox(height:size.height * 0.01,),
                Row(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: <Widget>[
-                   Icon(Icons.place_outlined,size: 19,color: Colors.green,),
-                   SizedBox(width:10.0,),
+                 children: [
+                   Icon(Icons.place_outlined,color: Colors.green,),
+                   Text('Khu vực',style: HeadLine1(context),),
+                 ],
+               ),
+               Row(
+                 children: [
+                   SizedBox(width: size.width * 0.07),
                    Container(
-                     width: size.width * 0.33,
+                     width: size.width * 0.32,
                      child: Text(
                        softWrap: true,
                        maxLines: 2,

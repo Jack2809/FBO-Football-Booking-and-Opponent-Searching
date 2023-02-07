@@ -61,7 +61,7 @@ class FieldDetail extends StatelessWidget{
                         color:  Colors.white,
                         borderRadius: BorderRadius.only(topRight:Radius.circular(20.0),topLeft:Radius.circular(20.0) ),
                       ),
-                        child: Center(child: Text(field.name,style: HeadLine1(context),))
+                        child: Center(child: Text(field.name,style: TextLine(context),))
                     ),
                     preferredSize: Size.fromHeight(20.0),
                   ),
@@ -80,18 +80,62 @@ class FieldDetail extends StatelessWidget{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('Địa chỉ',style:HeadLine1(context),),
-                            FieldInformationDetail(context,Icons.place_outlined,field.address +" "+ field.districtName),
+                            Row(
+                              children: [
+                                Icon(Icons.place_outlined,color: Colors.green),
+                                SizedBox(width:size.width * 0.01 ,),
+                                Text('Địa chỉ',style:HeadLine1(context),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(width: size.width * 0.06,),
+                                FieldInformationDetail(context,field.address +" "+ field.districtName),
+                              ],
+                            ),
                             SizedBox(height: 5.0,),
-                            Text('Giờ Hoạt Động',style:HeadLine1(context),),
-                            FieldInformationDetail(context,Icons.access_time,timeFormat(field.openTime)+"-"+timeFormat(field.closeTime)),
+                            Row(
+                              children: [
+                                Icon(Icons.access_time,color: Colors.green),
+                                SizedBox(width:size.width * 0.01 ,),
+                                Text('Giờ Hoạt Động',style:HeadLine1(context),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(width: size.width * 0.06,),
+                                FieldInformationDetail(context,timeFormat(field.openTime)+"-"+timeFormat(field.closeTime)),
+                              ],
+                            ),
                             SizedBox(height: 5.0,),
-                            Text('SĐT',style:HeadLine1(context),),
-                            FieldInformationDetail(context,Icons.phone,field.phone),
+                            Row(
+                              children: [
+                                Icon(Icons.phone,color: Colors.green),
+                                SizedBox(width:size.width * 0.01 ,),
+                                Text('SĐT',style:HeadLine1(context),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(width: size.width * 0.06,),
+                                FieldInformationDetail(context,field.phone),
+                              ],
+                            ),
                             SizedBox(height: 5.0,),
                             Divider(color: Colors.black45,),
-                            Text('Mô tả',style:HeadLine1(context),),
-                            FieldInformationDetail(context,Icons.description, field.description),
+                            Row(
+                              children: [
+                                Icon(Icons.description,color: Colors.green),
+                                SizedBox(width:size.width * 0.01 ,),
+                                Text('Mô tả',style:HeadLine1(context),),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(width: size.width * 0.06,),
+                                FieldInformationDetail(context, field.description),
+                              ],
+                            ),
                             // FieldConvenient(field.convenienceList),
                           ],
                         ),
@@ -131,16 +175,8 @@ class FieldDetail extends StatelessWidget{
     );
   }
 
-  Widget FieldInformationDetail(BuildContext context,IconData title,String info){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Icon(title,color: Colors.green,),
-        SizedBox(width: 5.0,),
-        Expanded(child: Text(info,style:TextLine3(context,false),)),
-      ],
-    );
+  Widget FieldInformationDetail(BuildContext context,String info){
+    return Expanded(child: Text(info,style:TextLine3(context,false),));
   }
 
   Widget FieldConvenient (BuildContext context,List<String> list){

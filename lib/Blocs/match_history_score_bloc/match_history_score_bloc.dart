@@ -13,9 +13,15 @@ class MatchHistoryScoreBloc extends Bloc<MatchHistoryScoreEvent,MatchHistoryScor
       emit(LoadedMatchHistoryScore(matchScores: matchScores));
     });
 
+    on<AddScore>((event, emit) async {
+      // emit(LoadingMatchHistoryScore());
+      var submitedScore = await submitScore(event.matchId,event.teamId,event.homeScore,event.awayScore);
+      // emit(LoadedMatchHistoryScore(matchScores: matchScores));
+    });
+
     on<SubmitScore>((event, emit) async {
       emit(LoadingMatchHistoryScore());
-      var submitedScore = await submitScore(event.matchId,event.teamId,event.homeScore,event.awayScore);
+      // var submitedScore = await submitScore(event.matchId,event.teamId,event.homeScore,event.awayScore);
       var lockedScore = await lockScore(event.matchId, event.teamId,event.rivalry);
       var matchScores = await getMatchScores(event.matchId,event.teamId);
       emit(LoadedMatchHistoryScore(matchScores: matchScores));

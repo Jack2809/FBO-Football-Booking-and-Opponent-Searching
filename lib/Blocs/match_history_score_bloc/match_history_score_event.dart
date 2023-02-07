@@ -20,13 +20,27 @@ class FetchMatchHistoryScore extends MatchHistoryScoreEvent{
 }
 
 class SubmitScore extends MatchHistoryScoreEvent{
+  final int teamId;
+  final int matchId;
+  final bool rivalry;
+
+  SubmitScore({required this.matchId,required this.teamId,required this.rivalry});
+
+  @override
+  List<Object> get props => [teamId,matchId,rivalry];
+
+
+
+}
+
+class AddScore extends MatchHistoryScoreEvent{
   final int homeScore;
   final int awayScore;
   final int teamId;
   final int matchId;
   final bool rivalry;
 
-  SubmitScore({required this.matchId,required this.teamId,required this.homeScore,required this.awayScore,required this.rivalry});
+  AddScore({required this.matchId,required this.teamId,required this.homeScore,required this.awayScore,required this.rivalry});
 
   @override
   List<Object> get props => [homeScore,awayScore,teamId,matchId,rivalry];

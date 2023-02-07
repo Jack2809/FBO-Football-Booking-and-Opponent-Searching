@@ -29,3 +29,13 @@ class AcceptWaitingRequestChallenge extends WaitingRequestEvent{
   @override
   List<Object> get props => [myRequestId,opponentRequestId,opponentTeamId];
 }
+
+class DeclineWaitingRequestChallenge extends WaitingRequestEvent{
+  final int myRequestId;
+  final int opponentRequestId;
+
+  DeclineWaitingRequestChallenge({required this.myRequestId,required this.opponentRequestId});
+
+  @override
+  List<Object> get props => [myRequestId,opponentRequestId];
+}

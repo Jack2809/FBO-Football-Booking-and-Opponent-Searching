@@ -133,7 +133,7 @@ class _FieldPageState extends State<FieldPage> {
                                       crossAxisCount: 2,
                                       mainAxisSpacing: 15.0,
                                       crossAxisSpacing: 15.0,
-                                      childAspectRatio: 0.58,
+                                      childAspectRatio: 0.57,
                                     ),
                                     itemCount: state.fieldList.length,
                                     itemBuilder: (BuildContext context,int index){

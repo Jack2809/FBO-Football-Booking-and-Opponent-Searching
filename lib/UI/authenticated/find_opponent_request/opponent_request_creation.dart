@@ -237,7 +237,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
 
                 ],
               ),
-              Text(validFreeTimeStr == null || validFreeTimeStr == "" ? "":validFreeTimeStr!,style: ErrorText(),),
+              Text(validFreeTimeStr == null || validFreeTimeStr == "" ? "":validFreeTimeStr!,style: ErrorText(context),),
               SizedBox(height: 10.0,),
               Text('Thời lượng',style: HeadLine1(context)),
               SizedBox(height: 20.0,),
@@ -375,7 +375,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                     }
                   }
               ),
-              Text(validDistrictStr == null || validDistrictStr == "" ? "":validDistrictStr!,style: ErrorText(),),
+              Text(validDistrictStr == null || validDistrictStr == "" ? "":validDistrictStr!,style: ErrorText(context),),
               SizedBox(height: 10.0,),
               BlocBuilder<TeamBloc,TeamState>(
                   builder:(context,state){
@@ -421,7 +421,7 @@ class _CreateOpponentRequestPageState extends State<CreateOpponentRequestPage> w
                                 ),
                               ),
                             ),
-                            Text(validTeamStr == null || validTeamStr == "" ? "":validTeamStr!,style: ErrorText(),),
+                            Text(validTeamStr == null || validTeamStr == "" ? "":validTeamStr!,style: ErrorText(context),),
                           ],
                         );
                       }

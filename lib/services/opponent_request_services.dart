@@ -95,11 +95,12 @@ Future<String> deleteOpponentRequest(int requestId) async{
       'Authorization': 'Bearer '+ accessKey,
     },
   );
+  log(response.body);
   if(response.statusCode == 200){
     return "Xóa yêu cầu thành công";
   }
   else if(response.statusCode == 400){
-    return "Xóa yêu cầu thất bại";
+    return "Không thể xóa yêu cầu vì đang trong quá trình đặt sân hoặc đã hoàn thành trận đấu";
   }else{
     return "Server Lỗi";
   }
@@ -173,6 +174,35 @@ Future<String> acceptChallenge (int myRequestId,int opponentRequestId,int oppone
         "teamId": opponentTeamId
       })
   );
+  log("accept status: "+ response.statusCode.toString());
+  if(response.statusCode == 200){
+    return "Chấp nhận yêu cầu thành công";
+  }
+  else if(response.statusCode == 400){
+    return "Yêu cầu này đã không còn khả dụng";
+  }
+  return 'Hiện tại yêu cầu này không được thực hiện, vui lòng kiểm tra lại';
+}
+
+Future<String> declineRequest(int requestId,int opponentRequestId) async{
+  String accessKey = UserAccessKey.getUserAccessKey() ?? "";
+  var response = await http.delete(
+    Uri.parse('https://football-booking-app.herokuapp.com/api/v1/tickets/'+requestId.toString()+'/reject-match?joiningTicketId='+opponentRequestId.toString()),
+    headers:<String,String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer '+ accessKey,
+    },
+  );
+  log('my ticket id:' + requestId.toString());
+  log('opponent ticket id:' + opponentRequestId.toString());
+  log("response status:"+response.statusCode.toString());
+  if(response.statusCode == 200){
+    return "Hủy bỏ thành công";
+  }
+  else if(response.statusCode == 400){
+    return "Hủy bỏ thất bại, vì yêu cầu của bạn đã được cáp kèo";
+  }
+  log(response.body);
   return response.body;
 }
 

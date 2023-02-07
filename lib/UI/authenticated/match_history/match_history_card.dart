@@ -62,7 +62,7 @@ class _MatchHistoryCardState extends State<MatchHistoryCard> {
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text("VS",style: ErrorText(),),
+              Text("VS",style: ErrorText(context),),
               Text(dateFormat(widget.matchHistory.bookingDate)),
               Container(
                 width: size.width * 0.2,
