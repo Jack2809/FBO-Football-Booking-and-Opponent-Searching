@@ -307,7 +307,7 @@ class _BookingFieldAfterMatchedPageState extends State<BookingFieldAfterMatchedP
 
 
                                     SizedBox(height: 20.0,),
-                                    _isFirstClickedConfirm?SizedBox():!_isAppropriateStartTime ? Text('Giờ đá chưa phù hợp với giờ trống của sân',style: ErrorText(),textAlign: TextAlign.center,):SizedBox(),
+                                    _isFirstClickedConfirm?SizedBox():!_isAppropriateStartTime ? Text('Giờ đá chưa phù hợp với giờ trống của sân',style: ErrorText(context),textAlign: TextAlign.center,):SizedBox(),
                                     Container(
                                       width: size.width,
                                       decoration: BoxDecoration(

@@ -88,3 +88,23 @@ MatchScores parseMatchScores(String response){
   return MatchScores.fromJson(map);
 }
 
+Future<bool> isScoreConflict(int matchId,int teamId) async {
+  String accessKey = UserAccessKey.getUserAccessKey() ?? '';
+  var response = await http.post(
+      Uri.parse('https://football-booking-app.herokuapp.com/api/v1/matches/'+matchId.toString()+'/is-score-conflict'),
+      headers:<String,String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer '+ accessKey,
+      },
+      body : jsonEncode(<String,dynamic>{
+        "teamId": teamId,
+      })
+  );
+
+  Map<String,dynamic> map = jsonDecode(utf8.decode(response.bodyBytes));
+  if(map['message'] == 'false'){
+    return false;
+  }else {
+    return true;
+  }
+}

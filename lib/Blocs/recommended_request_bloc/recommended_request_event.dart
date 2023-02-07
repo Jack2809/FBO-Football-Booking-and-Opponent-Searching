@@ -30,3 +30,13 @@ class SendChallengeRequest extends RecommendedRequestEvent{
   @override
   List<Object> get props => [myRequestId,opponentRequestId,myTeamId];
 }
+
+class CancelChallengeRequest extends RecommendedRequestEvent{
+  final int myRequestId;
+  final int opponentRequestId;
+
+  CancelChallengeRequest({required this.myRequestId,required this.opponentRequestId});
+
+  @override
+  List<Object> get props => [myRequestId,opponentRequestId];
+}

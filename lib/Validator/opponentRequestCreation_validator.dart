@@ -15,7 +15,7 @@ mixin InputOpponentRequestValidation {
 
   String? isValidFreeTimeValid (TimeOfDay freeTimeStart,TimeOfDay freeTimeEnd,int duration){
     if (freeTimeStart == TimeOfDay(hour: 0,minute: 0) && freeTimeEnd == TimeOfDay(hour: 0,minute: 0)) {
-      return "vui lòng chọn đầy đủ thời gian rảnh";
+      return "Vui lòng chọn đầy đủ thời gian rảnh";
     }else{
       var now = DateTime.now();
       DateTime start;
@@ -60,10 +60,10 @@ String? isSelectedClub(int? clubId){
     }
     if(_is5vs5){
       if(team.numberOfPlayers < 5 || team.numberOfPlayers > 7)
-        return "số lượng thành viên phải là 5 - 6 cầu thủ";
+        return "Số lượng thành viên phải là 5-6 cầu thủ";
     }else{
       if(team.numberOfPlayers < 7 || team.numberOfPlayers > 9)
-        return "số lượng thành viên phải từ 7 - 9 cầu thủ ";
+        return "Số lượng thành viên phải từ 7-9 cầu thủ";
     }
     return "";
   }

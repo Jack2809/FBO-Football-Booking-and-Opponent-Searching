@@ -34,7 +34,7 @@ class BillPayDetailPage extends StatelessWidget{
           padding: MyPaddingAll10(),
           child: Column(
             children: [
-              Text('Tổng tiền đặt cọc',style: TextLine(context),),
+              Text('Tổng tiền đặt cọc',style: HeadLine1(context),),
               SizedBox(height: size.height * 0.02,),
               Text(toVND(billPay.amount),style: HeadLine(context),),
               SizedBox(height: size.height * 0.02,),
@@ -53,7 +53,7 @@ class BillPayDetailPage extends StatelessWidget{
                   Spacer(),
                   Container(
                     width: size.width * 0.3,
-                      child: Text(convertTimeAndHour(billPay.date),style: TextLine1(context,true),maxLines: 2,)
+                      child: Text(convertTimeAndHour(billPay.date),style: TextLine1(context,false),maxLines: 2,)
                   )
 
                 ],
@@ -74,7 +74,7 @@ class BillPayDetailPage extends StatelessWidget{
                   Spacer(),
                   Container(
                     width: size.width * 0.3,
-                      child: Text(billPay.payType,style: TextLine1(context,true),maxLines: 2,)
+                      child: Text(billPay.payType,style: TextLine1(context,false),maxLines: 2,)
                   )
 
                 ],
@@ -95,7 +95,7 @@ class BillPayDetailPage extends StatelessWidget{
                   Spacer(),
                   Container(
                     width: size.width * 0.4,
-                      child: Text(billPay.facilityName,style: TextLine1(context,true),maxLines: 2,)
+                      child: Text(billPay.facilityName,style: TextLine1(context,false),maxLines: 2,)
                   )
 
                 ],
@@ -115,7 +115,7 @@ class BillPayDetailPage extends StatelessWidget{
                   SizedBox(width: 5.0,),
                   Text('Loại sân: ',style: HeadLine1(context),),
                   Spacer(),
-                  Text(billPay.fieldType,style: TextLine1(context,true),maxLines: 2,)
+                  Text(billPay.fieldType,style: TextLine1(context,false),maxLines: 2,)
 
                 ],
               ),
@@ -134,7 +134,7 @@ class BillPayDetailPage extends StatelessWidget{
                   SizedBox(width: 5.0,),
                   Text('Ngày đá: ',style: HeadLine1(context),),
                   Spacer(),
-                  Text(dateFormat(billPay.dateReserved),style: TextLine1(context,true),maxLines: 2,)
+                  Text(dateFormat(billPay.dateReserved),style: TextLine1(context,false),maxLines: 2,)
 
                 ],
               ),
@@ -153,7 +153,7 @@ class BillPayDetailPage extends StatelessWidget{
                   SizedBox(width: 5.0,),
                   Text('Giờ đá: ',style: HeadLine1(context),),
                   Spacer(),
-                  Text(timeFormat(billPay.startTime)+" - "+timeFormat(billPay.endTime),style: TextLine1(context,true),maxLines: 2,)
+                  Text(timeFormat(billPay.startTime)+" - "+timeFormat(billPay.endTime),style: TextLine1(context,false),maxLines: 2,)
 
                 ],
               ),
